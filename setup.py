@@ -7,8 +7,8 @@ from setuptools import *
 Setup script for CrossMap  -- Lift over genomics coordinates between assemblies
 """
 
-if sys.version_info[0] != 2 or sys.version_info[1] < 7:
-	print("ERROR: CrossMap requires Python 2.7", file=sys.stderr)
+if sys.version_info[0] < 2 or (sys.version_info[0] == 2 and sys.version_info[1] < 7):
+	print("ERROR: CrossMap requires Python 2.7 or newer", file=sys.stderr)
 	sys.exit()
 	
 
