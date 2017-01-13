@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 #import built-in modules
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 import os,sys
 import re
 import string
@@ -38,11 +41,11 @@ def RSS(arg):
 	
 def H_mean(arg):
 	'''calculate harmornic mean. Input is ',' separated numbers'''
-	lst=[1/float(i) for i in arg.split(',') if float(i) !=0]
+	lst=[old_div(1,float(i)) for i in arg.split(',') if float(i) !=0]
 	if len(lst) == 0:
 		return "NA"
 	else:
-		return len(lst)/(sum(lst))
+		return old_div(len(lst),(sum(lst)))
 
 def shannon_entropy(arg):
 	'''calculate shannon's entropy (or Shannon-Wiener index). Input is ',' separated numbers'''
@@ -51,7 +54,7 @@ def shannon_entropy(arg):
 	if sum(lst)<=0 or min(lst)<0:return "NA"
 	entropy=0.0
 	for i in lst:
-		entropy += (i/sum(lst)) * math.log((i/sum(lst)))
+		entropy += (old_div(i,sum(lst))) * math.log((old_div(i,sum(lst))))
 	return -entropy
 
 	
@@ -69,8 +72,8 @@ def shannon_entropy_es(arg):
 	for i in lst:
 		if i ==1:singleton +=1
 	
-	C_bar = 1- (singleton/sum(lst))
-	for i in lst:entropy += ( (C_bar*i/sum(lst)) * math.log((C_bar*i/sum(lst))) )/(1-(1-C_bar*i/sum(lst))**sum(lst))
+	C_bar = 1- (old_div(singleton,sum(lst)))
+	for i in lst:entropy += old_div(( (C_bar*i/sum(lst)) * math.log((C_bar*i/sum(lst))) ),(1-(1-C_bar*i/sum(lst))**sum(lst)))
 	return -entropy
 
 def shannon_entropy_ht(arg):
@@ -83,7 +86,7 @@ def shannon_entropy_ht(arg):
 	#estimate C_bar
 	entropy=0.0
 	for i in lst:
-		entropy += ( (i/sum(lst)) * math.log((i/sum(lst))) )/(1-(1-i/sum(lst))**sum(lst))
+		entropy += old_div(( (old_div(i,sum(lst))) * math.log((old_div(i,sum(lst)))) ),(1-(1-old_div(i,sum(lst)))**sum(lst)))
 	return -entropy
 	
 def simpson_index(arg):
@@ -94,7 +97,7 @@ def simpson_index(arg):
 	
 	try:
 		for i in lst:
-			simpson = simpson + (i/sum(lst))**2
+			simpson = simpson + (old_div(i,sum(lst)))**2
 		return 1-simpson
 	except: return 0
 	
@@ -107,7 +110,7 @@ def simpson_index_es(arg):
 	try:
 		for i in lst:
 			simpson = simpson + i*(i-1)
-		return 1- (simpson/(sum(lst)*(sum(lst)-1)))
+		return 1- (old_div(simpson,(sum(lst)*(sum(lst)-1))))
 	except: return 0
 	
 def Hill_number(arg,qvalue=1):
@@ -119,9 +122,9 @@ def Hill_number(arg,qvalue=1):
 	
 	lst=arg.split(',')
 	lst=[float(i) for i in lst if float(i)>0]
-	freq=[(i/sum(lst))**qvalue for i in lst]
+	freq=[(old_div(i,sum(lst)))**qvalue for i in lst]
 	try:
-		return (sum(freq))**(1/(1-qvalue))
+		return (sum(freq))**(old_div(1,(1-qvalue)))
 	except:
 		return math.exp(shannon_entropy(arg))
 import math

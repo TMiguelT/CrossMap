@@ -3,6 +3,13 @@
 #04/13/2011
 
 #import built-in modules
+from __future__ import division
+from __future__ import print_function
+from builtins import str
+from builtins import map
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import os,sys
 import re
 import string
@@ -22,7 +29,7 @@ from bx.binned_array import BinnedArray
 from bx_extras.fpconst import isNaN
 
 
-class ParseWig:
+class ParseWig(object):
 	'''provie methods to manipulate wiggle format file. For wiggle format see:
 	http://genome.ucsc.edu/goldenPath/help/wiggle.html'''
 	
@@ -36,9 +43,9 @@ class ParseWig:
 			chrom=chrom.upper()
 			if not chrom in self.scores: self.scores[ chrom ] = BinnedArray()
 			self.scores[chrom][pos] = val
-			if i % 100000 == 0: print "%i datapoints loaded \r" % i 
+			if i % 100000 == 0: print("%i datapoints loaded \r" % i) 
 		#print self.scores.keys()
-		print "total " + str(i) + " points loaded"
+		print("total " + str(i) + " points loaded")
 		
 	def fetch_all_scores(self,chr,st,end):
 		'''fetch all wiggle scores defined by st and end.  NOTE:
@@ -71,7 +78,7 @@ class ParseWig:
 		
 		chr=chr.upper()
 		lst=[ float(self.scores[chr][i]) for i in range(st,end) if self.num_re.match(str(self.scores[chr][i]))]
-		return sum(lst)/len(range(st,end))
+		return old_div(sum(lst),len(list(range(st,end))))
 		
 	def fetch_sum_scores(self,chr,st,end):
 		''' fetch sum score defined by chr, st, end
@@ -83,7 +90,7 @@ class ParseWig:
 		return sum(lst)		
 #if __name__ == "__main__": main()
 
-class ParseWig2:
+class ParseWig2(object):
 	'''provie methods to manipulate wiggle format file. For wiggle format see:
 	http://genome.ucsc.edu/goldenPath/help/wiggle.html. The same coordinate could occur more than
 	one time in wig file, and the scores will be sumed up. Slower than ParseWig'''
@@ -102,9 +109,9 @@ class ParseWig2:
 				self.scores[chrom][pos] = val
 			else:
 				self.scores[chrom][pos] += val
-			if i % 100000 == 0: print "%i datapoints loaded \r" % i 
+			if i % 100000 == 0: print("%i datapoints loaded \r" % i) 
 		#print self.scores.keys()
-		print "total " + str(i) + " points loaded"
+		print("total " + str(i) + " points loaded")
 		
 	def fetch_all_scores_by_range(self,chr,st,end):
 		'''fetch all wiggle scores defined by st and end.  NOTE:
@@ -152,14 +159,14 @@ class ParseWig2:
 		'''			
 		chr=chr.upper()
 		lst=[ float(self.scores[chr][i]) for i in range(st,end) if self.num_re.match(str(self.scores[chr][i]))]
-		return sum(lst)/len(range(st,end))
+		return old_div(sum(lst),len(list(range(st,end))))
 		
 	def fetch_avg_scores_by_positions(self,chr,lst):
 		''' fetch average score defined by chr, st, end
 		'''			
 		chr=chr.upper()
 		lst_score =[ float(self.scores[chr][i]) for i in lst if self.num_re.match(str(self.scores[chr][i]))]
-		return sum(lst_score)/len(lst_score)
+		return old_div(sum(lst_score),len(lst_score))
 		
 	def fetch_sum_scores_by_range(self,chr,st,end):
 		''' fetch sum score defined by chr, st, end
@@ -179,7 +186,7 @@ class ParseWig2:
 		'''calculate coverage over bed file (only consider exon regions). The mRNA sequences in input
 		bed file will be cut into 100 tills of equal size'''
 		
-		print >>sys.stderr,"Reading " + bed + " ..."
+		print("Reading " + bed + " ...", file=sys.stderr)
 		for line in open(bed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue
@@ -189,12 +196,12 @@ class ParseWig2:
 				strand=fields[5]
 				geneName=fields[3]
 				score=fields[4]
-				exon_start=map(int,fields[11].rstrip(',').split(','))
-				exon_start=map((lambda x: x + txStart),exon_start)
-				exon_end=map(int,fields[10].rstrip(',').split(','))
-				exon_end=map((lambda x,y:x+y),exon_start,exon_end)
+				exon_start=list(map(int,fields[11].rstrip(',').split(',')))
+				exon_start=list(map((lambda x: x + txStart),exon_start))
+				exon_end=list(map(int,fields[10].rstrip(',').split(',')))
+				exon_end=list(map((lambda x,y:x+y),exon_start,exon_end))
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 		
 #if __name__ == "__main__": main()

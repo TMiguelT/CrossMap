@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 '''manipulate SAM file.'''
+from __future__ import division
+from __future__ import print_function
 
 #import built-in modules
+from builtins import zip
+from builtins import map
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import os,sys
 import re
 import string
@@ -41,7 +49,7 @@ __email__ = "liguow@bcm.edu"
 __status__ = "Development" #Prototype or Production
 
 
-class ParseSAM:
+class ParseSAM(object):
 	'''This class provides fuctions to parsing/processing/transforming SAM format file
 	Format of SAM file see: http://samtools.sourceforge.net/SAM1.pdf'''
 	_reExpr1=re.compile(r'\s+')				#>=1 spaces
@@ -153,52 +161,52 @@ class ParseSAM:
 					forward_SE +=1
 				
 		if paired:				
-			print >>sys.stderr,"\n#=================================================="
-			print >>sys.stderr,"#================Report (pair-end)================="
-			print >>sys.stderr, "%-25s%d" % ("Total Reads:",total_read)
-			print >>sys.stderr, "%-25s%d" % ("Total Mapped Reads:", (mapped_read1 + mapped_read2))
-			print >>sys.stderr, "%-25s%d" % ("Total Unmapped Reads:",(unmapped_read1 + unmapped_read2))
-			print >>sys.stderr, "%-25s%d" % ("PCR duplicate:",pcr_duplicate)
-			print >>sys.stderr, "%-25s%d" % ("QC-failed:",low_qual)
-			print >>sys.stderr, "%-25s%d" % ("Not primary mapping:",secondary_hit)
-			print >>sys.stderr, "\n",
-			print >>sys.stderr, "%-25s%d" % ("Unmapped Read-1:",unmapped_read1)
-			print >>sys.stderr, "%-25s%d" % ("Mapped Read-1:",mapped_read1)
-			print >>sys.stderr, "%-25s%d" % ("  Forward (+):",forward_read1)
-			print >>sys.stderr, "%-25s%d" % ("  Reverse (-):",reverse_read1)
+			print("\n#==================================================", file=sys.stderr)
+			print("#================Report (pair-end)=================", file=sys.stderr)
+			print("%-25s%d" % ("Total Reads:",total_read), file=sys.stderr)
+			print("%-25s%d" % ("Total Mapped Reads:", (mapped_read1 + mapped_read2)), file=sys.stderr)
+			print("%-25s%d" % ("Total Unmapped Reads:",(unmapped_read1 + unmapped_read2)), file=sys.stderr)
+			print("%-25s%d" % ("PCR duplicate:",pcr_duplicate), file=sys.stderr)
+			print("%-25s%d" % ("QC-failed:",low_qual), file=sys.stderr)
+			print("%-25s%d" % ("Not primary mapping:",secondary_hit), file=sys.stderr)
+			print("\n", end=' ', file=sys.stderr)
+			print("%-25s%d" % ("Unmapped Read-1:",unmapped_read1), file=sys.stderr)
+			print("%-25s%d" % ("Mapped Read-1:",mapped_read1), file=sys.stderr)
+			print("%-25s%d" % ("  Forward (+):",forward_read1), file=sys.stderr)
+			print("%-25s%d" % ("  Reverse (-):",reverse_read1), file=sys.stderr)
 			
-			print >>sys.stderr, "\n",
-			print >>sys.stderr, "%-25s%d" % ("Unmapped Read-2:",unmapped_read2)
-			print >>sys.stderr, "%-25s%d" % ("Mapped Read-2:",mapped_read2)
-			print >>sys.stderr, "%-25s%d" % ("  Forward (+):",forward_read2)
-			print >>sys.stderr, "%-25s%d" % ("  Reverse (-):",reverse_read2)
+			print("\n", end=' ', file=sys.stderr)
+			print("%-25s%d" % ("Unmapped Read-2:",unmapped_read2), file=sys.stderr)
+			print("%-25s%d" % ("Mapped Read-2:",mapped_read2), file=sys.stderr)
+			print("%-25s%d" % ("  Forward (+):",forward_read2), file=sys.stderr)
+			print("%-25s%d" % ("  Reverse (-):",reverse_read2), file=sys.stderr)
 			
-			print >>sys.stderr, "\n",
-			print >>sys.stderr, "%-25s%d" % ("Mapped to (+/-):",plus_minus)
-			print >>sys.stderr, "%-25s%d" % ("Mapped to (-/+):",minus_plus)
-			print >>sys.stderr, "%-25s%d" % ("Mapped to (+/+):",plus_plus)
-			print >>sys.stderr, "%-25s%d" % ("Mapped to (-/-):",minus_minus)
-			print >>sys.stderr, "\n",
-			print >>sys.stderr, "%-25s%d" % ("Spliced Hits:",_numSplitHit)
-			print >>sys.stderr, "%-25s%d" % ("Non-spliced Hits:",_numMonoHit)
-			print >>sys.stderr, "%-25s%d" % ("Reads have insertion:",_numInsertion)
-			print >>sys.stderr, "%-25s%d" % ("Reads have deletion:",_numDeletion)
+			print("\n", end=' ', file=sys.stderr)
+			print("%-25s%d" % ("Mapped to (+/-):",plus_minus), file=sys.stderr)
+			print("%-25s%d" % ("Mapped to (-/+):",minus_plus), file=sys.stderr)
+			print("%-25s%d" % ("Mapped to (+/+):",plus_plus), file=sys.stderr)
+			print("%-25s%d" % ("Mapped to (-/-):",minus_minus), file=sys.stderr)
+			print("\n", end=' ', file=sys.stderr)
+			print("%-25s%d" % ("Spliced Hits:",_numSplitHit), file=sys.stderr)
+			print("%-25s%d" % ("Non-spliced Hits:",_numMonoHit), file=sys.stderr)
+			print("%-25s%d" % ("Reads have insertion:",_numInsertion), file=sys.stderr)
+			print("%-25s%d" % ("Reads have deletion:",_numDeletion), file=sys.stderr)
 		else:
-			print >>sys.stderr,"\n#===================================================="
-			print >>sys.stderr,"#================Report (single-end)================="
-			print >>sys.stderr, "%-25s%d" % ("Total Reads:",total_read)
-			print >>sys.stderr, "%-25s%d" % ("Total Mapped Reads:", map_SE)
-			print >>sys.stderr, "%-25s%d" % ("Total Unmapped Reads:",unmap_SE)
-			print >>sys.stderr, "%-25s%d" % ("PCR duplicate:",pcr_duplicate)
-			print >>sys.stderr, "%-25s%d" % ("QC-failed:",low_qual)
-			print >>sys.stderr, "%-25s%d" % ("Not primary mapping:",secondary_hit)
-			print >>sys.stderr, "%-25s%d" % ("froward (+):",forward_SE)
-			print >>sys.stderr, "%-25s%d" % ("reverse (-):",reverse_SE)
-			print >>sys.stderr, "\n",
-			print >>sys.stderr, "%-25s%d" % ("Spliced Hits:",_numSplitHit)
-			print >>sys.stderr, "%-25s%d" % ("Non-spliced Hits:",_numMonoHit)
-			print >>sys.stderr, "%-25s%d" % ("Reads have insertion:",_numInsertion)
-			print >>sys.stderr, "%-25s%d" % ("Reads have deletion:",_numDeletion)			
+			print("\n#====================================================", file=sys.stderr)
+			print("#================Report (single-end)=================", file=sys.stderr)
+			print("%-25s%d" % ("Total Reads:",total_read), file=sys.stderr)
+			print("%-25s%d" % ("Total Mapped Reads:", map_SE), file=sys.stderr)
+			print("%-25s%d" % ("Total Unmapped Reads:",unmap_SE), file=sys.stderr)
+			print("%-25s%d" % ("PCR duplicate:",pcr_duplicate), file=sys.stderr)
+			print("%-25s%d" % ("QC-failed:",low_qual), file=sys.stderr)
+			print("%-25s%d" % ("Not primary mapping:",secondary_hit), file=sys.stderr)
+			print("%-25s%d" % ("froward (+):",forward_SE), file=sys.stderr)
+			print("%-25s%d" % ("reverse (-):",reverse_SE), file=sys.stderr)
+			print("\n", end=' ', file=sys.stderr)
+			print("%-25s%d" % ("Spliced Hits:",_numSplitHit), file=sys.stderr)
+			print("%-25s%d" % ("Non-spliced Hits:",_numMonoHit), file=sys.stderr)
+			print("%-25s%d" % ("Reads have insertion:",_numInsertion), file=sys.stderr)
+			print("%-25s%d" % ("Reads have deletion:",_numDeletion), file=sys.stderr)			
 			
 	def samTobed(self,outfile=None,mergePE=False):
 		"""Convert SAM file to BED file. BED file will be saved as xxx.sam.bed unless otherwise specified.
@@ -207,7 +215,7 @@ class ParseSAM:
 		if outfile is None:
 			outfile=self.fileName + ".bed"
 
-		print >>sys.stderr,"\tWriting bed entries to\"",outfile,"\"...",
+		print("\tWriting bed entries to\"",outfile,"\"...", end=' ', file=sys.stderr)
 		FO=open(outfile,'w')
 		for line in self.f:
 			if line.startswith(('@','track')):continue		#skip head lines
@@ -234,7 +242,7 @@ class ParseSAM:
 			thickStart = chromStart
 			thickEnd = chromEnd
 			itemRgb = "0,255,0"
-			blockCount = (len(comb) +1) /2
+			blockCount = old_div((len(comb) +1),2)
 			blockSize = []
 			for i in range(0,len(comb),2):
 				blockSize.append(str(comb[i]))
@@ -243,14 +251,14 @@ class ParseSAM:
 			for i in range(0,len(comb),2):
 				blockStart.append(str(sum(comb[:i])))
 			blockStarts = ','.join(blockStart)
-			print >>FO, string.join((str(i) for i in [chrom,chromStart,chromEnd,name,score,strand,thickStart,thickEnd,itemRgb,blockCount,blockSizes,blockStarts]),sep="\t")			
-		print >>sys.stderr, "Done"
+			print(string.join((str(i) for i in [chrom,chromStart,chromEnd,name,score,strand,thickStart,thickEnd,itemRgb,blockCount,blockSizes,blockStarts]),sep="\t"), file=FO)			
+		print("Done", file=sys.stderr)
 		FO.close()
 		self.f.seek(0)
 
 		if mergePE:
 		#creat another bed file. pair-end reads will be merged into single bed entry
-			print >>sys.stderr, "Writing consoidated bed file ...",
+			print("Writing consoidated bed file ...", end=' ', file=sys.stderr)
 			bedfile = open(outfile,'r')
 			outfile_2 = outfile + ".consolidate.bed"
 			outfile_3 = outfile + '.filter'
@@ -295,11 +303,11 @@ class ParseSAM:
 					if(blocks[key] ==1):	#single end, single hit
 						st = [i - txSt[key] for i in starts[key]]
 						st = string.join([str(i) for i in st],',')
-						print >>FO, chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key,"\t","11\t",strand[key][0],"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sizes[key],','),"\t",st
+						print(chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key,"\t","11\t",strand[key][0],"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sizes[key],','),"\t",st, file=FO)
 					else:
 						st = [i - txSt[key] for i in starts[key]]	#single end, spliced hit
 						st = string.join([str(i) for i in st],',')
-						print >>FO, chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key,"\t","12\t",strand[key][0],"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sizes[key],','),"\t",st						
+						print(chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key,"\t","12\t",strand[key][0],"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sizes[key],','),"\t",st, file=FO)						
 								
 				elif(count[key]==2):	#pair-end read
 					direction = string.join(strand[key],'/')	
@@ -309,17 +317,17 @@ class ParseSAM:
 					#st=[string.atoi(i) for i in st]
 					if(len(chr[key])==1):	#pair-end reads mapped to same chromosome
 						if blocks[key] ==2:	#pair end, single hits
-							print >>FO, chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key + "|strand=" + direction + "|chrom=same","\t","21\t",'.',"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sz,','),"\t",string.join([str(i) for i in st],',')
+							print(chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key + "|strand=" + direction + "|chrom=same","\t","21\t",'.',"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sz,','),"\t",string.join([str(i) for i in st],','), file=FO)
 						elif blocks[key] >2:	#
-							print >>FO, chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key + "|strand=" + direction + "|chrom=same","\t","22\t",'.',"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sz,','),"\t",string.join([str(i) for i in st],',')
+							print(chr[key].pop(),"\t",txSt[key],"\t",txEnd[key],"\t",key + "|strand=" + direction + "|chrom=same","\t","22\t",'.',"\t",txSt[key],"\t",txEnd[key],"\t","0,255,0\t",blocks[key],"\t",string.join(sz,','),"\t",string.join([str(i) for i in st],','), file=FO)
 					else:
-						print >>FOF,key,"\t","pair-end mapped, but two ends mapped to different chromosome"
+						print(key,"\t","pair-end mapped, but two ends mapped to different chromosome", file=FOF)
 				elif(count[key] >2):	#reads occur more than 2 times
-					print >>FOF,key,"\t","occurs more than 2 times in sam file"
+					print(key,"\t","occurs more than 2 times in sam file", file=FOF)
 					continue
 			FO.close()
 			FOF.close()
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 
 
 	def samTowig(self,outfile=None,log2scale=False,header=False,strandSpecific=False):
@@ -329,7 +337,7 @@ class ParseSAM:
 		if outfile is None:
 			outfile = self.fileName + ".wig"
 		FO=open(outfile,'w')
-		print >>sys.stderr, "Writing wig file to\"",outfile,"\"..."
+		print("Writing wig file to\"",outfile,"\"...", file=sys.stderr)
 		
 		headline="track type=wiggle_0 name=" + outfile + " track_label description='' visibility=full color=255,0,0"
 		wig=collections.defaultdict(dict)
@@ -362,24 +370,24 @@ class ParseSAM:
 			
 			blocks = cigar.fetch_exon(chrom,txStart,field[5])	
 			for block in blocks:
-				hits.extend(range(block[1]+1,block[2]+1))
+				hits.extend(list(range(block[1]+1,block[2]+1)))
 				
 			if strandSpecific is not True:
 				for i in hits:
-					if wig[chrom].has_key(i):
+					if i in wig[chrom]:
 						wig[chrom][i] +=1
 					else:
 						wig[chrom][i]=1
 			else:
 				if strand_rule[read_type + strand] == '-':
 					for i in hits:
-						if Nwig[chrom].has_key(i):
+						if i in Nwig[chrom]:
 							Nwig[chrom][i] += 1
 						else:
 							Nwig[chrom][i] = 1
 				if strand_rule[read_type + strand] == '+':
 					for i in hits:
-						if Pwig[chrom].has_key(i):
+						if i in Pwig[chrom]:
 							Pwig[chrom][i] +=1
 						else:
 							Pwig[chrom][i]=1					
@@ -388,17 +396,17 @@ class ParseSAM:
 		
 		if strandSpecific is not True:
 			for chr in sorted(wig.keys()):
-				print >>sys.stderr, "Writing ",chr, " ..."
+				print("Writing ",chr, " ...", file=sys.stderr)
 				FO.write('variableStep chrom='+chr+'\n')
 				for coord in sorted(wig[chr]):
 					if log2scale:FO.write("%d\t%5.3f\n" % (coord,math.log(wig[chr][coord],2)))
 					else:FO.write("%d\t%d\n" % (coord,wig[chr][coord]))
 		else:
-			chroms=set(Pwig.keys() + Nwig.keys())
+			chroms=set(list(Pwig.keys()) + list(Nwig.keys()))
 			for chr in sorted(chroms):
-				print >>sys.stderr, "Writing ",chr, " ..."
+				print("Writing ",chr, " ...", file=sys.stderr)
 				FO.write('variableStep chrom='+chr+'\n')
-				coords=sorted(set(Pwig[chr].keys() + Nwig[chr].keys()))
+				coords=sorted(set(list(Pwig[chr].keys()) + list(Nwig[chr].keys())))
 				for coord in coords:
 					if ((coord in Pwig[chr]) and (coord not in Nwig[chr])):
 						FO.write("%d\t%d\n" % (coord,Pwig[chr][coord]))
@@ -421,7 +429,7 @@ class ParseSAM:
 			else: outfile = self.fileName + ".unmap.fa"
 		FO=open(outfile,'w')
 		unmapCount=0
-		print >>sys.stderr, "Writing unmapped reads to\"",outfile,"\"... ",
+		print("Writing unmapped reads to\"",outfile,"\"... ", end=' ', file=sys.stderr)
 		
 		for line in self.f:
 			hits=[]
@@ -441,7 +449,7 @@ class ParseSAM:
 				if fastq: FO.write('@' + seqID + '\n' + seq +'\n' + '+' +'\n' + qual+'\n')
 				else: FO.write('>' + seqID + '\n' + seq +'\n')
 
-		print >>sys.stderr, str(unmapCount) + " reads saved!\n"
+		print(str(unmapCount) + " reads saved!\n", file=sys.stderr)
 		FO.close()
 		self.f.seek(0)
 	
@@ -452,7 +460,7 @@ class ParseSAM:
 			outfile = self.fileName + ".PP.sam"
 		FO=open(outfile,'w')
 		PPcount=0
-		print >>sys.stderr, "Writing proper paired reads to\"",outfile,"\"... ",
+		print("Writing proper paired reads to\"",outfile,"\"... ", end=' ', file=sys.stderr)
 		for line in self.f:
 			hits=[]
 			if line[0] == '@':continue						#skip head lines	
@@ -463,7 +471,7 @@ class ParseSAM:
 				PPcount +=1
 				FO.write(line)
 		FO.close()
-		print >>sys.stderr, str(PPcount) + " reads were saved!\n",
+		print(str(PPcount) + " reads were saved!\n", end=' ', file=sys.stderr)
 		self.f.seek(0)
 
 	def samNVC(self,outfile=None):
@@ -484,7 +492,7 @@ class ParseSAM:
 		c_count=[]
 		g_count=[]
 		t_count=[]
-		print >>sys.stderr, "reading sam file ... "
+		print("reading sam file ... ", file=sys.stderr)
 		for line in self.f:
 			if line.startswith('@'):continue									#skip head lines	
 			if ParseSAM._reExpr2.match(line):continue					#skip blank lines
@@ -495,44 +503,44 @@ class ParseSAM:
 				RNA_read = field[9].upper()
 			else:
 				RNA_read = field[9].upper().translate(transtab)[::-1]
-			for i in xrange(len(RNA_read)):
+			for i in range(len(RNA_read)):
 				key = str(i) + RNA_read[i]
 				base_freq[key] += 1
 		
-		print >>sys.stderr, "generating data matrix ..."
-		print >>FO, "Position\tA\tC\tG\tT\tN\tX"
-		for i in xrange(len(RNA_read)):
-			print  >>FO, str(i) + '\t',
-			print  >>FO, str(base_freq[str(i) + "A"]) + '\t',
+		print("generating data matrix ...", file=sys.stderr)
+		print("Position\tA\tC\tG\tT\tN\tX", file=FO)
+		for i in range(len(RNA_read)):
+			print(str(i) + '\t', end=' ', file=FO)
+			print(str(base_freq[str(i) + "A"]) + '\t', end=' ', file=FO)
 			a_count.append(str(base_freq[str(i) + "A"]))
-			print  >>FO, str(base_freq[str(i) + "C"]) + '\t',
+			print(str(base_freq[str(i) + "C"]) + '\t', end=' ', file=FO)
 			c_count.append(str(base_freq[str(i) + "C"]))
-			print  >>FO, str(base_freq[str(i) + "G"]) + '\t',
+			print(str(base_freq[str(i) + "G"]) + '\t', end=' ', file=FO)
 			g_count.append(str(base_freq[str(i) + "G"]))
-			print  >>FO, str(base_freq[str(i) + "T"]) + '\t',
+			print(str(base_freq[str(i) + "T"]) + '\t', end=' ', file=FO)
 			t_count.append(str(base_freq[str(i) + "T"]))
-			print  >>FO, str(base_freq[str(i) + "N"]) + '\t',
-			print  >>FO, str(base_freq[str(i) + "X"]) + '\t'
+			print(str(base_freq[str(i) + "N"]) + '\t', end=' ', file=FO)
+			print(str(base_freq[str(i) + "X"]) + '\t', file=FO)
 		FO.close()
 		
 		#generating R scripts
-		print >>sys.stderr, "generating R script  ..."
-		print >>RS, "position=c(" + ','.join([str(i) for i in xrange(len(RNA_read))]) + ')'
-		print >>RS, "A_count=c(" + ','.join(a_count) + ')'
-		print >>RS, "C_count=c(" + ','.join(c_count) + ')'
-		print >>RS, "G_count=c(" + ','.join(g_count) + ')'
-		print >>RS, "T_count=c(" + ','.join(t_count) + ')'
-		print >>RS, "total= A_count + C_count + G_count + T_count"
-		print >>RS, "ym=max(A_count/total,C_count/total,G_count/total,T_count/total) + 0.05"
-		print >>RS, "yn=min(A_count/total,C_count/total,G_count/total,T_count/total)"
+		print("generating R script  ...", file=sys.stderr)
+		print("position=c(" + ','.join([str(i) for i in range(len(RNA_read))]) + ')', file=RS)
+		print("A_count=c(" + ','.join(a_count) + ')', file=RS)
+		print("C_count=c(" + ','.join(c_count) + ')', file=RS)
+		print("G_count=c(" + ','.join(g_count) + ')', file=RS)
+		print("T_count=c(" + ','.join(t_count) + ')', file=RS)
+		print("total= A_count + C_count + G_count + T_count", file=RS)
+		print("ym=max(A_count/total,C_count/total,G_count/total,T_count/total) + 0.05", file=RS)
+		print("yn=min(A_count/total,C_count/total,G_count/total,T_count/total)", file=RS)
 		
-		print >>RS, 'pdf("NVC_plot.pdf")'
-		print >>RS, 'plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")'
-		print >>RS, 'lines(position,T_count/total,type="o",pch=20,col="red")'
-		print >>RS, 'lines(position,G_count/total,type="o",pch=20,col="blue")'
-		print >>RS, 'lines(position,C_count/total,type="o",pch=20,col="cyan")'
-		print >>RS, 'legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C"),col=c("dark green","red","blue","cyan"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan"))'
-		print >>RS, "dev.off()"
+		print('pdf("NVC_plot.pdf")', file=RS)
+		print('plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")', file=RS)
+		print('lines(position,T_count/total,type="o",pch=20,col="red")', file=RS)
+		print('lines(position,G_count/total,type="o",pch=20,col="blue")', file=RS)
+		print('lines(position,C_count/total,type="o",pch=20,col="cyan")', file=RS)
+		print('legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C"),col=c("dark green","red","blue","cyan"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan"))', file=RS)
+		print("dev.off()", file=RS)
 		
 		RS.close()
 		#self.f.seek(0)
@@ -549,7 +557,7 @@ class ParseSAM:
 		RS=open(outfile2,'w')
 		
 		gc_hist=collections.defaultdict(int)	#key is GC percent, value is count of reads
-		print >>sys.stderr, "reading sam file ... "
+		print("reading sam file ... ", file=sys.stderr)
 		for line in self.f:
 			if line[0] == '@':continue						#skip head lines	
 			if ParseSAM._reExpr2.match(line):continue		#skip blank lines
@@ -559,18 +567,18 @@ class ParseSAM:
 			#print gc_percent
 			gc_hist[gc_percent] += 1
 		
-		print >>sys.stderr, "writing GC content ..."
+		print("writing GC content ...", file=sys.stderr)
 		
-		print >>FO, "GC%\tread_count"
-		for i in gc_hist.keys():
-			print >>FO, i + '\t' + str(gc_hist[i])
+		print("GC%\tread_count", file=FO)
+		for i in list(gc_hist.keys()):
+			print(i + '\t' + str(gc_hist[i]), file=FO)
 			
-		print >>sys.stderr, "writing R script ..."
-		print >>RS, "pdf('GC_content.pdf')"
-		print >>RS, 'gc=rep(c(' + ','.join([i for i in gc_hist.keys()]) + '),' + 'times=c(' + ','.join([str(i) for i in gc_hist.values()]) + '))'
-		print >>RS, 'hist(gc,probability=T,breaks=%d,xlab="GC content (%%)",ylab="Density of Reads",border="blue",main="")' % 100
+		print("writing R script ...", file=sys.stderr)
+		print("pdf('GC_content.pdf')", file=RS)
+		print('gc=rep(c(' + ','.join([i for i in list(gc_hist.keys())]) + '),' + 'times=c(' + ','.join([str(i) for i in list(gc_hist.values())]) + '))', file=RS)
+		print('hist(gc,probability=T,breaks=%d,xlab="GC content (%%)",ylab="Density of Reads",border="blue",main="")' % 100, file=RS)
 		#print >>RS, "lines(density(gc),col='red')"
-		print >>RS ,"dev.off()"		
+		print("dev.off()", file=RS)		
 		#self.f.seek(0)
 		
 	def samDupRate(self,outfile=None,up_bound=500):
@@ -592,7 +600,7 @@ class ParseSAM:
 		
 		seqDup_count=collections.defaultdict(int)
 		posDup_count=collections.defaultdict(int)
-		print >>sys.stderr, "reading sam file ... "
+		print("reading sam file ... ", file=sys.stderr)
 		for line in self.f:
 			if line[0] == '@':continue						#skip head lines	
 			if ParseSAM._reExpr2.match(line):continue		#skip blank lines
@@ -619,37 +627,37 @@ class ParseSAM:
 			coord = chrom + ":" + str(chromStart) + "-" + str(chromEnd) + ":" + blockSizes + ":" + blockStarts
 			posDup[coord] +=1
 			
-		print >>sys.stderr, "report duplicte rate based on sequence ..."
-		print >>SEQ, "Occurrence\tUniqReadNumber"
-		for i in seqDup.values():			#key is occurence, value is uniq reads number (based on seq)
+		print("report duplicte rate based on sequence ...", file=sys.stderr)
+		print("Occurrence\tUniqReadNumber", file=SEQ)
+		for i in list(seqDup.values()):			#key is occurence, value is uniq reads number (based on seq)
 			seqDup_count[i] +=1
-		for k in sorted(seqDup_count.iterkeys()):	
-			print >>SEQ, str(k) +'\t'+ str(seqDup_count[k])
+		for k in sorted(seqDup_count.keys()):	
+			print(str(k) +'\t'+ str(seqDup_count[k]), file=SEQ)
 		SEQ.close()
 		
-		print >>sys.stderr, "report duplicte rate based on mapping  ..."
-		print >>POS, "Occurrence\tUniqReadNumber"
-		for i in posDup.values():			#key is occurence, value is uniq reads number (based on coord)
+		print("report duplicte rate based on mapping  ...", file=sys.stderr)
+		print("Occurrence\tUniqReadNumber", file=POS)
+		for i in list(posDup.values()):			#key is occurence, value is uniq reads number (based on coord)
 			posDup_count[i] +=1
-		for k in sorted(posDup_count.iterkeys()):	
-			print >>POS, str(k) +'\t'+ str(posDup_count[k])
+		for k in sorted(posDup_count.keys()):	
+			print(str(k) +'\t'+ str(posDup_count[k]), file=POS)
 		POS.close()
 		
 		
-		print >>sys.stderr, "generate R script ..."
-		print >>RS, "pdf('duplicateRead.pdf')"
-		print >>RS, "par(mar=c(5,4,4,5),las=0)"
-		print >>RS, "seq_occ=c(" + ','.join([str(i) for i in sorted(seqDup_count.iterkeys()) ]) + ')'
-		print >>RS, "seq_uniqRead=c(" + ','.join([str(seqDup_count[i]) for i in sorted(seqDup_count.iterkeys()) ]) + ')'
-		print >>RS, "pos_occ=c(" + ','.join([str(i) for i in sorted(posDup_count.iterkeys()) ]) + ')'
-		print >>RS, "pos_uniqRead=c(" + ','.join([str(posDup_count[i]) for i in sorted(posDup_count.iterkeys()) ]) + ')'
-		print >>RS, "plot(pos_occ,log10(pos_uniqRead),ylab='Number of Reads (log10)',xlab='Frequency',pch=4,cex=0.8,col='blue',xlim=c(1,%d),yaxt='n')" % up_bound
-		print >>RS, "points(seq_occ,log10(seq_uniqRead),pch=20,cex=0.8,col='red')"
-		print >>RS, 'ym=floor(max(log10(pos_uniqRead)))'
-		print >>RS, "legend(%d,ym,legend=c('Sequence-base','Mapping-base'),col=c('red','blue'),pch=c(4,20))" % max(up_bound-200,1)
-		print >>RS, 'axis(side=2,at=0:ym,labels=0:ym)'
-		print >>RS, 'axis(side=4,at=c(log10(pos_uniqRead[1]),log10(pos_uniqRead[2]),log10(pos_uniqRead[3]),log10(pos_uniqRead[4])), labels=c(round(pos_uniqRead[1]*100/sum(pos_uniqRead)),round(pos_uniqRead[2]*100/sum(pos_uniqRead)),round(pos_uniqRead[3]*100/sum(pos_uniqRead)),round(pos_uniqRead[4]*100/sum(pos_uniqRead))))'
-		print >>RS, 'mtext(4, text = "Reads %", line = 2)'
+		print("generate R script ...", file=sys.stderr)
+		print("pdf('duplicateRead.pdf')", file=RS)
+		print("par(mar=c(5,4,4,5),las=0)", file=RS)
+		print("seq_occ=c(" + ','.join([str(i) for i in sorted(seqDup_count.keys()) ]) + ')', file=RS)
+		print("seq_uniqRead=c(" + ','.join([str(seqDup_count[i]) for i in sorted(seqDup_count.keys()) ]) + ')', file=RS)
+		print("pos_occ=c(" + ','.join([str(i) for i in sorted(posDup_count.keys()) ]) + ')', file=RS)
+		print("pos_uniqRead=c(" + ','.join([str(posDup_count[i]) for i in sorted(posDup_count.keys()) ]) + ')', file=RS)
+		print("plot(pos_occ,log10(pos_uniqRead),ylab='Number of Reads (log10)',xlab='Frequency',pch=4,cex=0.8,col='blue',xlim=c(1,%d),yaxt='n')" % up_bound, file=RS)
+		print("points(seq_occ,log10(seq_uniqRead),pch=20,cex=0.8,col='red')", file=RS)
+		print('ym=floor(max(log10(pos_uniqRead)))', file=RS)
+		print("legend(%d,ym,legend=c('Sequence-base','Mapping-base'),col=c('red','blue'),pch=c(4,20))" % max(up_bound-200,1), file=RS)
+		print('axis(side=2,at=0:ym,labels=0:ym)', file=RS)
+		print('axis(side=4,at=c(log10(pos_uniqRead[1]),log10(pos_uniqRead[2]),log10(pos_uniqRead[3]),log10(pos_uniqRead[4])), labels=c(round(pos_uniqRead[1]*100/sum(pos_uniqRead)),round(pos_uniqRead[2]*100/sum(pos_uniqRead)),round(pos_uniqRead[3]*100/sum(pos_uniqRead)),round(pos_uniqRead[4]*100/sum(pos_uniqRead))))', file=RS)
+		print('mtext(4, text = "Reads %", line = 2)', file=RS)
 		#self.f.seek(0)
 		
 	def getUniqMapRead(self,outfile=None):
@@ -658,7 +666,7 @@ class ParseSAM:
 			outfile = self.fileName + ".uniq.sam"
 		FO=open(outfile,'w')
 		Uniqcount=0
-		print >>sys.stderr, "Writing uniquely mapped reads to\"",outfile,"\"... ",
+		print("Writing uniquely mapped reads to\"",outfile,"\"... ", end=' ', file=sys.stderr)
 		for line in self.f:
 			hits=[]
 			if line[0] == '@':continue						#skip head lines	
@@ -670,11 +678,11 @@ class ParseSAM:
 			#else:
 				#print >>sys.stderr,line,
 			if (ParseSAM._uniqueHit_pat.search(line)):
-				print >>sys.stderr,line,
+				print(line, end=' ', file=sys.stderr)
 				Uniqcount +=1
 				FO.write(line)
 		FO.close()
-		print >>sys.stderr, str(Uniqcount) + " reads were saved!\n",
+		print(str(Uniqcount) + " reads were saved!\n", end=' ', file=sys.stderr)
 		self.f.seek(0)
 
 	def getWrongStrand(self,outfile=None):
@@ -683,7 +691,7 @@ class ParseSAM:
 			outfile = self.fileName + ".wrongStrand.sam"
 		FO=open(outfile,'w')
 		wrongStrand=0
-		print >>sys.stderr, "Writing incorrectly stranded reads to\"",outfile,"\"... ",
+		print("Writing incorrectly stranded reads to\"",outfile,"\"... ", end=' ', file=sys.stderr)
 		for line in self.f:
 			hits=[]
 			if line.startswith('@'):continue						#skip head lines	
@@ -704,7 +712,7 @@ class ParseSAM:
 				wrongStrand+=1
 
 		FO.close()
-		print >>sys.stderr, str(wrongStrand) + " reads were saved!\n",
+		print(str(wrongStrand) + " reads were saved!\n", end=' ', file=sys.stderr)
 		self.f.seek(0)
 		
 	def filterSpliceRead(self,outfile=None,min_overhang=8,min_gap=50,max_gap=1000000):
@@ -717,7 +725,7 @@ class ParseSAM:
 			outfile = self.fileName + ".SR.sam"
 			#outfile2 = self.fileName + ".SR.filter.sam"			
 		splice_sites=collections.defaultdict(set)
-		print >>sys.stderr, "\tDetermine splice sites with proper overhang, intron size ... ",
+		print("\tDetermine splice sites with proper overhang, intron size ... ", end=' ', file=sys.stderr)
 		for line in self.f:
 			if line[0] == '@':continue						#skip head lines	
 			if ParseSAM._reExpr2.match(line):continue		#skip blank lines
@@ -744,12 +752,12 @@ class ParseSAM:
 					if (comb[2] >= min_overhang):
 						splice_sites[chrom].add(map_st + comb[0] + comb[1])			
 		self.f.seek(0)	
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 		
 		FO=open(outfile,'w')
 		#FO2=open(outfile2,'w')
-		print >>sys.stderr, "\tExtracting splicing reads  ... ",
+		print("\tExtracting splicing reads  ... ", end=' ', file=sys.stderr)
 		total_SR =0
 		extract_SR =0
 		total_read =0
@@ -781,10 +789,10 @@ class ParseSAM:
 				else:
 					#FO2.write(line)
 					continue
-		print >>sys.stderr, "Done"
-		print >>sys.stderr, "\tTotal mapped Read: " + str(total_read)
-		print >>sys.stderr, "\tTotal Splicing Read: " + str(total_SR)
-		print >>sys.stderr, "\Usable Splicing Read: " + str(extract_SR)
+		print("Done", file=sys.stderr)
+		print("\tTotal mapped Read: " + str(total_read), file=sys.stderr)
+		print("\tTotal Splicing Read: " + str(total_SR), file=sys.stderr)
+		print("\Usable Splicing Read: " + str(extract_SR), file=sys.stderr)
 		FO.close()
 		#FO2.close()
 		self.f.seek(0)	
@@ -795,7 +803,7 @@ class ParseSAM:
 		if outfile is None:
 			outfile = self.fileName + ".SR.sam"
 		FO=open(outfile,'w')
-		print >>sys.stderr, "\tExtract splicing reads without any filter ...",
+		print("\tExtract splicing reads without any filter ...", end=' ', file=sys.stderr)
 		for line in self.f:
 			if line[0] == '@':continue						#skip head lines	
 			if ParseSAM._reExpr2.match(line):continue		#skip blank lines
@@ -806,7 +814,7 @@ class ParseSAM:
 			if (len(comb)>=3):
 				FO.write(line)
 		
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		self.f.seek(0)	
 		FO.close()
 
@@ -815,7 +823,7 @@ class ParseSAM:
 		The original SAM file must be sorted before hand. if not, using linux command like "sort -k3,3 -k4,4n myfile.sam >myfile.sorted.sam" '''
 		if outfile is None:
 			outfile = self.fileName + ".collapsed.sam"
-		print >>sys.stderr, "Writing collapsed SAM file to\"",outfile,"\"... "
+		print("Writing collapsed SAM file to\"",outfile,"\"... ", file=sys.stderr)
 		FO=open(outfile,'w')		
 		flag=""
 		for line in self.f:
@@ -843,7 +851,7 @@ class ParseSAM:
 		else:
 			outfile = outfile + ".qual.plot.r"
 		FO=open(outfile,'w')
-		print >>sys.stderr, "\tcalculating quality score ... "
+		print("\tcalculating quality score ... ", file=sys.stderr)
 		qual_min={}
 		qual_max={}
 		qual_sum={}
@@ -876,18 +884,18 @@ class ParseSAM:
 			#print '\n',
 		min_qualities = [str(qual_min[i]) for i in range(0,read_len)]
 		max_qualities =[str(qual_max[i]) for i in range(0,read_len)]
-		avg_qualities = [str(qual_sum[i]/total_read) for i in range(0,read_len)]
+		avg_qualities = [str(old_div(qual_sum[i],total_read)) for i in range(0,read_len)]
 		nt_pos = [str(i) for i in range(0,read_len)]
-		print >>FO, "nt_pos=c(" + ','.join(nt_pos)  + ')'
-		print >>FO, "max_qual=c(" + ','.join(max_qualities)  + ')'
-		print >>FO, "min_qual=c(" + ','.join(min_qualities)  + ')'
-		print >>FO, "avg_qual=c(" + ','.join(avg_qualities)  + ')'
-		print >>FO, "pdf('phred_qual.pdf')"
-		print >>FO, "plot(nt_pos,avg_qual, xlab=\"Nucleotide Position (5'->3')\", ylab='Phred Quality',ylim=c(0,97),lwd=2,type='s')"
-		print >>FO, 'lines(nt_pos,max_qual,type="s",lwd=2,col="red")'
-		print >>FO, 'lines(nt_pos,min_qual,type="s",lwd=2,col="blue")'
-		print >>FO, 'legend(0,100,legend=c("Max","Average","Min"),col=c("red","black","blue"),lwd=2)'
-		print >>FO, 'dev.off()'
+		print("nt_pos=c(" + ','.join(nt_pos)  + ')', file=FO)
+		print("max_qual=c(" + ','.join(max_qualities)  + ')', file=FO)
+		print("min_qual=c(" + ','.join(min_qualities)  + ')', file=FO)
+		print("avg_qual=c(" + ','.join(avg_qualities)  + ')', file=FO)
+		print("pdf('phred_qual.pdf')", file=FO)
+		print("plot(nt_pos,avg_qual, xlab=\"Nucleotide Position (5'->3')\", ylab='Phred Quality',ylim=c(0,97),lwd=2,type='s')", file=FO)
+		print('lines(nt_pos,max_qual,type="s",lwd=2,col="red")', file=FO)
+		print('lines(nt_pos,min_qual,type="s",lwd=2,col="blue")', file=FO)
+		print('legend(0,100,legend=c("Max","Average","Min"),col=c("red","black","blue"),lwd=2)', file=FO)
+		print('dev.off()', file=FO)
 		#for i in range(0,read_len):
 		#	print >>sys.stderr, str(i) + '\t' + str(qual_max[i]) + '\t' + str(qual_min[i]) + '\t' + str(qual_sum[i]/total_read)
 		#self.f.seek(0)
@@ -921,11 +929,11 @@ class ParseSAM:
 						scores[chrom][pos] =1
 					else:
 						scores[chrom][pos] +=1			
-			if lines % 10000 == 0: print >>sys.stderr, "%i lines loaded \r" % lines
+			if lines % 10000 == 0: print("%i lines loaded \r" % lines, file=sys.stderr)
 		return scores
 		self.f.seek(0)
 
-class QCSAM:
+class QCSAM(object):
 	'''Perform basic quality control. Useful for RNA-seq experiment'''
 	
 
@@ -946,7 +954,7 @@ class QCSAM:
 		The 5th column is number of reads fallen into the region defined by the first 3 columns'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			exon_count = self.fileName + "_exon.count.bed"
@@ -971,7 +979,7 @@ class QCSAM:
 		splicedReads=0
 		
 		#read SAM 
-		print >>sys.stderr, "reading "+ self.fileName + '...',
+		print("reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -986,17 +994,17 @@ class QCSAM:
 				chrom=fields[2].upper()
 				#st=int(fields[3])-1
 				#end= st +len(fields[9])
-				mid = int(fields[3]) + int(len(fields[9])/2)
+				mid = int(fields[3]) + int(old_div(len(fields[9]),2))
 				if chrom not in ranges:
 					ranges[chrom] = Intersecter()
 				else:
 					ranges[chrom].add_interval( Interval( mid, mid ) )
     			
 		self.f.seek(0)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 		#read refbed file
-		print >>sys.stderr, "Assign reads to "+ refbed + '...',
+		print("Assign reads to "+ refbed + '...', end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith('#'):continue
@@ -1010,14 +1018,14 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 				intron_starts = exon_ends[:-1]
 				intron_ends=exon_starts[1:]
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 
 				# assign reads to intron				
@@ -1053,28 +1061,28 @@ class QCSAM:
 						EXON_OUT.write(chrom + "\t" + str(st) + "\t" + str(end) + "\t" + geneName + "_exon_" + str(exonNum) + "\t" + str(hits) + "\t" + strand + '\n')
 						exonNum += 1		
 		intergenicReads=totalReads-exonReads-intronReads-splicedReads		
-		print >>sys.stderr, "Done." + '\n'
-		print >>sys.stderr, "Total reads:\t" + str(totalReads)
-		print >>sys.stderr, "Exonic reads:\t" + str(exonReads) 
-		print >>sys.stderr, "Intronic reads:\t" + str(intronReads) 
-		print >>sys.stderr, "Splicing reads:\t" + str(splicedReads)
-		print >>sys.stderr, "Intergenic reads:\t" + str(intergenicReads)
+		print("Done." + '\n', file=sys.stderr)
+		print("Total reads:\t" + str(totalReads), file=sys.stderr)
+		print("Exonic reads:\t" + str(exonReads), file=sys.stderr) 
+		print("Intronic reads:\t" + str(intronReads), file=sys.stderr) 
+		print("Splicing reads:\t" + str(splicedReads), file=sys.stderr)
+		print("Intergenic reads:\t" + str(intergenicReads), file=sys.stderr)
 		
-		print >>sys.stderr,"writing R script ...",
+		print("writing R script ...", end=' ', file=sys.stderr)
 		totalReads=float(totalReads)
-		print >>R_OUT, "pdf('%s')" % rpdf
-		print >>R_OUT, "dat=c(%d,%d,%d,%d)" % (exonReads,splicedReads,intronReads,intergenicReads)
-		print >>R_OUT, "lb=c('exon(%.2f)','junction(%.2f)','intron(%.2f)','intergenic(%.2f)')" % (exonReads/totalReads,splicedReads/totalReads,intronReads/totalReads,intergenicReads/totalReads)
-		print >>R_OUT, "pie(dat,labels=lb,col=rainbow(4),clockwise=TRUE,main='Total reads = %d')" % int(totalReads)
-		print >>R_OUT, "dev.off()"
-		print >>sys.stderr, "Done."
+		print("pdf('%s')" % rpdf, file=R_OUT)
+		print("dat=c(%d,%d,%d,%d)" % (exonReads,splicedReads,intronReads,intergenicReads), file=R_OUT)
+		print("lb=c('exon(%.2f)','junction(%.2f)','intron(%.2f)','intergenic(%.2f)')" % (old_div(exonReads,totalReads),old_div(splicedReads,totalReads),old_div(intronReads,totalReads),old_div(intergenicReads,totalReads)), file=R_OUT)
+		print("pie(dat,labels=lb,col=rainbow(4),clockwise=TRUE,main='Total reads = %d')" % int(totalReads), file=R_OUT)
+		print("dev.off()", file=R_OUT)
+		print("Done.", file=sys.stderr)
 	
 	
 	def coverageGeneBody(self,refbed,outfile=None):
 		'''Calculate reads coverage over gene body, from 5'to 3'. each gene will be equally divied
 		into 100 regsions'''
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			outfile1 = self.fileName + ".geneBodyCoverage_plot.r"
@@ -1091,7 +1099,7 @@ class QCSAM:
 		rpkm={}
 		
 		#read SAM 
-		print >>sys.stderr, "reading "+ self.fileName + '...',
+		print("reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1102,7 +1110,7 @@ class QCSAM:
 			chrom = fields[2].upper()
 			chromStart = string.atoi(fields[3])-1
 			comb=[int(i) for i in ParseSAM._splicedHit_pat.findall(fields[5])]	#"9M4721N63M3157N8M" return ['9', '4721', '63', '3157', '8']
-			fragment_num += (len(comb) +1)/2
+			fragment_num += old_div((len(comb) +1),2)
 			blockStart=[]
 			blockSize=[]
 			
@@ -1117,9 +1125,9 @@ class QCSAM:
 					ranges[chrom] = Intersecter()
 				else:
 					ranges[chrom].add_interval( Interval( st, st+size ) )
-		print >>sys.stderr, "Done"   	
+		print("Done", file=sys.stderr)   	
 
-		print >>sys.stderr, "calculating coverage over gene body ..."
+		print("calculating coverage over gene body ...", file=sys.stderr)
 		coverage=collections.defaultdict(int)
 		flag=0
 		for line in open(refbed,'r'):
@@ -1133,19 +1141,19 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5]
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 			gene_all_base=[]
 			percentile_base=[]
 			mRNA_len =0
 			flag=0
 			for st,end in zip(exon_starts,exon_ends):
-				gene_all_base.extend(range(st+1,end+1))		#0-based coordinates on genome
+				gene_all_base.extend(list(range(st+1,end+1)))		#0-based coordinates on genome
 				mRNA_len = len(gene_all_base)
 				if mRNA_len <100:
 					flag=1
@@ -1162,18 +1170,18 @@ class QCSAM:
 					coverage[i] += len(ranges[chrom].find(percentile_base[i], percentile_base[i]+1))
 		x_coord=[]
 		y_coord=[]
-		print >>OUT2, "Total reads: " + str(totalReads)
-		print >>OUT2, "Fragment number: " + str(fragment_num)
-		print >>OUT2, "percentile\tcount"
+		print("Total reads: " + str(totalReads), file=OUT2)
+		print("Fragment number: " + str(fragment_num), file=OUT2)
+		print("percentile\tcount", file=OUT2)
 		for i in coverage:
 			x_coord.append(str(i))
 			y_coord.append(str(coverage[i]))
-			print >>OUT2, str(i) + '\t' + str(coverage[i])
-		print >>OUT1, "pdf('geneBody_coverage.pdf')"
-		print >>OUT1, "x=0:100"
-		print >>OUT1, "y=c(" + ','.join(y_coord) + ')'
-		print >>OUT1, "plot(x,y,xlab=\"percentile of gene body (5'->3')\",ylab='read number',type='s')"
-		print >>OUT1, "dev.off()"
+			print(str(i) + '\t' + str(coverage[i]), file=OUT2)
+		print("pdf('geneBody_coverage.pdf')", file=OUT1)
+		print("x=0:100", file=OUT1)
+		print("y=c(" + ','.join(y_coord) + ')', file=OUT1)
+		print("plot(x,y,xlab=\"percentile of gene body (5'->3')\",ylab='read number',type='s')", file=OUT1)
+		print("dev.off()", file=OUT1)
 			
 	def calculateRPKM(self,refbed,outfile=None):
 		'''calculate RPKM values for each gene in refbed. Only uniquely aligned reads are used. 
@@ -1181,7 +1189,7 @@ class QCSAM:
 		exon per Million mapped reads) for each exon, intron and mRNA'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			rpkm_file = self.fileName + ".rpkm.xls"
@@ -1197,7 +1205,7 @@ class QCSAM:
 		rpkm={}
 		
 		#read SAM 
-		print >>sys.stderr, "reading "+ self.fileName + '...',
+		print("reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1211,7 +1219,7 @@ class QCSAM:
 			chrom = fields[2].upper()
 			chromStart = string.atoi(fields[3])-1
 			comb=[int(i) for i in ParseSAM._splicedHit_pat.findall(fields[5])]	#"9M4721N63M3157N8M" return ['9', '4721', '63', '3157', '8']
-			cUR += (len(comb) +1)/2
+			cUR += old_div((len(comb) +1),2)
 			if(len(comb)>1):
 				sR+=1
 			blockStart=[]
@@ -1224,24 +1232,24 @@ class QCSAM:
 				blockSize.append(comb[i])
 			
 			for st,size in zip(blockStart,blockSize):
-				mid = int(st) + (size/2)
+				mid = int(st) + (old_div(size,2))
 				if chrom not in ranges:
 					ranges[chrom] = Intersecter()
 				else:
 					ranges[chrom].add_interval( Interval( mid, mid ) )
     			
 		self.f.seek(0)
-		print >>sys.stderr, "Done"
-		print >>RPKM_OUT, "Total mapped reads (TR): " + str(totalReads) 
-		print >>RPKM_OUT, "Multiple mapped reads (MR): " + str(multiMapReads)
-		print >>RPKM_OUT, "Uniquely mapped reads (UR): " + str(totalReads - multiMapReads)
-		print >>RPKM_OUT, "Spliced  mapped reads (SR): " + str(sR)
-		print >>RPKM_OUT, "Corrected uniquely mapped reads (cUR): " + str(cUR)
+		print("Done", file=sys.stderr)
+		print("Total mapped reads (TR): " + str(totalReads), file=RPKM_OUT) 
+		print("Multiple mapped reads (MR): " + str(multiMapReads), file=RPKM_OUT)
+		print("Uniquely mapped reads (UR): " + str(totalReads - multiMapReads), file=RPKM_OUT)
+		print("Spliced  mapped reads (SR): " + str(sR), file=RPKM_OUT)
+		print("Corrected uniquely mapped reads (cUR): " + str(cUR), file=RPKM_OUT)
 		if totalReads ==0:
 			sys.exit(1)
 		
 		#read refbed file
-		print >>sys.stderr, "Assign reads to "+ refbed + '...',
+		print("Assign reads to "+ refbed + '...', end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith('#'):continue
@@ -1255,16 +1263,16 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-				exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+				exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 				intron_starts = exon_ends[:-1]
 				intron_ends=exon_starts[1:]
 				key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 
 			# assign reads to intron				
@@ -1312,7 +1320,7 @@ class QCSAM:
 				except:
 					RPKM_OUT.write(chrom.lower() + "\t" + str(tx_start) + "\t" + str(tx_end) + "\t" + geneName + "_mRNA" + "\t" + str(0) + "\t" + strand + '\t' +  str(0) +'\n')
 					rpkm[key] = 0
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		return rpkm
 		self.f.seek(0)
 
@@ -1323,7 +1331,7 @@ class QCSAM:
 		NOTE: intronic reads are not counted as part of total reads'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			rpkm_file = self.fileName + ".rpkm.xls"
@@ -1341,7 +1349,7 @@ class QCSAM:
 		rpkm={}
 		
 		#read gene model file, the purpose is to remove intronic reads
-		print >>sys.stderr, "Reading reference gene model "+ refbed + '...'
+		print("Reading reference gene model "+ refbed + '...', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue
@@ -1354,12 +1362,12 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue	
 
 			for st,end in zip(exon_starts,exon_ends):				
@@ -1369,7 +1377,7 @@ class QCSAM:
 					exon_ranges[chrom].add_interval( Interval( st, end ) )		
 
 		#read SAM 
-		print >>sys.stderr, "reading "+ self.fileName + '...',
+		print("reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1399,7 +1407,7 @@ class QCSAM:
 			for st,size in zip(blockStart,blockSize):
 				if (chrom in exon_ranges) and (len(exon_ranges[chrom].find(st,st+size)) >0):	#if we found this fragment is overlapped with exon
 					cUR += 1
-					mid = int(st) + (size/2)
+					mid = int(st) + (old_div(size,2))
 					if chrom not in ranges:
 						ranges[chrom] = Intersecter()
 					else:
@@ -1408,18 +1416,18 @@ class QCSAM:
     				#intronic +=1
     				continue	
 		self.f.seek(0)
-		print >>sys.stderr, "Done"
-		print >>RPKM_OUT, "Total mapped reads (TR): " + str(totalReads) 
-		print >>RPKM_OUT, "Multiple mapped reads (MR): " + str(multiMapReads)
-		print >>RPKM_OUT, "Uniquely mapped reads (UR): " + str(totalReads - multiMapReads)
-		print >>RPKM_OUT, "Spliced  mapped reads (SR): " + str(sR)
-		print >>RPKM_OUT, "Corrected uniquely mapped reads (cUR, non-intronic fragments): " + str(cUR)
+		print("Done", file=sys.stderr)
+		print("Total mapped reads (TR): " + str(totalReads), file=RPKM_OUT) 
+		print("Multiple mapped reads (MR): " + str(multiMapReads), file=RPKM_OUT)
+		print("Uniquely mapped reads (UR): " + str(totalReads - multiMapReads), file=RPKM_OUT)
+		print("Spliced  mapped reads (SR): " + str(sR), file=RPKM_OUT)
+		print("Corrected uniquely mapped reads (cUR, non-intronic fragments): " + str(cUR), file=RPKM_OUT)
 		#print >>RPKM_OUT, "Intronic Fragments (IF): " + str(intronic)
 		if totalReads ==0:
 			sys.exit(1)
 		
 		#read refbed file
-		print >>sys.stderr, "Assign reads to "+ refbed + '...',
+		print("Assign reads to "+ refbed + '...', end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith('#'):continue
@@ -1433,16 +1441,16 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-				exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+				exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 				intron_starts = exon_ends[:-1]
 				intron_ends=exon_starts[1:]
 				key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 
 			# assign reads to intron				
@@ -1490,7 +1498,7 @@ class QCSAM:
 				except:
 					RPKM_OUT.write(chrom.lower() + "\t" + str(tx_start) + "\t" + str(tx_end) + "\t" + geneName + "_mRNA" + "\t" + str(0) + "\t" + strand + '\t' +  str(0) +'\n')
 					rpkm[key] = 0
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		return rpkm
 		self.f.seek(0)
 
@@ -1502,7 +1510,7 @@ class QCSAM:
 		unknownReads=0
 		ranges={}
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		
 		if outfile is None:
@@ -1511,7 +1519,7 @@ class QCSAM:
 			out_file = outfile + ".unknownReads.SAM"	
 		OUT=open(out_file,'w')
 		
-		print >>sys.stderr, "Reading reference gene model "+ refbed + '...'
+		print("Reading reference gene model "+ refbed + '...', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue
@@ -1524,12 +1532,12 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue	
 
 			for st,end in zip(exon_starts,exon_ends):				
@@ -1538,7 +1546,7 @@ class QCSAM:
 				else:
 					ranges[chrom].add_interval( Interval( st, end ) )		
 
-		print >>sys.stderr, "Processing SAM file "+ self.fileName + '...'
+		print("Processing SAM file "+ self.fileName + '...', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1567,8 +1575,8 @@ class QCSAM:
 				OUT.write(line)
 				unknownReads +=1
 		OUT.close()
-		print >>sys.stderr, "Total reads mapped to genome: " + str(totalReads)
-		print >>sys.stderr, "Total reads not overlapped with any exon: " + str(unknownReads)
+		print("Total reads mapped to genome: " + str(totalReads), file=sys.stderr)
+		print("Total reads not overlapped with any exon: " + str(unknownReads), file=sys.stderr)
 		self.f.seek(0)
 
 	def genomicFragSize(self,outfile=None,low_bound=0,up_bound=1000,step=10):
@@ -1592,7 +1600,7 @@ class QCSAM:
 		ranges={}
 		ranges[chrom]=Intersecter()
 		
-		window_left_bound = range(low_bound,up_bound,step)
+		window_left_bound = list(range(low_bound,up_bound,step))
  		frag_size=0
 
  		pair_num=0.0
@@ -1601,7 +1609,7 @@ class QCSAM:
  		size=[]
  		counts=[]
  		count=0
-		print >>sys.stderr, "Reading SAM file "+ self.fileName + ' ... ',
+		print("Reading SAM file "+ self.fileName + ' ... ', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1609,7 +1617,7 @@ class QCSAM:
 			#	continue
 			flagCode=string.atoi(fields[1])
 			if (flagCode & 0x0001) ==0:
-				print >>sys.stderr,"NOT pair-end sequencing"
+				print("NOT pair-end sequencing", file=sys.stderr)
 				sys.exit(1)
 			if (flagCode & 0x0004) != 0: continue			#skip unmap reads
 			if not ParseSAM._uniqueHit_pat.search(line):	#skip multiple mapped reads
@@ -1635,29 +1643,29 @@ class QCSAM:
 				ultra_high +=1
 				continue
 			ranges[chrom].add_interval( Interval( frag_size-1, frag_size ) )
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 		if pair_num==0:
-			print >>sys.stderr, "Cannot find paired reads"
+			print("Cannot find paired reads", file=sys.stderr)
 			sys.exit(0)
-		print >>FQ, "Total paired read " + str(pair_num)
-		print >>FQ, "<=" + str(low_bound) + "\t"+ str(ultra_low)
+		print("Total paired read " + str(pair_num), file=FQ)
+		print("<=" + str(low_bound) + "\t"+ str(ultra_low), file=FQ)
 		for st in window_left_bound:
-			size.append(str(st + step/2))
+			size.append(str(st + old_div(step,2)))
 			count = str(len(ranges[chrom].find(st,st + step)))
 			counts.append(count)
-			print >>FQ, str(st) + '\t' + str(st+step) +'\t' + count		
-		print >>FQ, ">" + str(up_bound) + "\t"+ str(ultra_high)
+			print(str(st) + '\t' + str(st+step) +'\t' + count, file=FQ)		
+		print(">" + str(up_bound) + "\t"+ str(ultra_high), file=FQ)
 		
-		print >>RS, "pdf('gFragSize.pdf')"
-		print >>RS, "par(mfrow=c(2,1),cex.main=0.8,cex.lab=0.8,cex.axis=0.8,mar=c(4,4,4,1))"
-		print >>RS, 'pie(c(%d,%d,%d),col=rainbow(3),cex=0.5,radius=1,main="Total %d fragments",labels=c("fraSize <= %d\\n(%4.2f%%)","fragSize > %d\\n(%4.2f%%)","%d < fragSize <= %d\\n(%4.2f%%)"), density=rep(80,80,80),angle=c(90,140,170))' % (ultra_low, ultra_high, pair_num -ultra_low -ultra_high, pair_num, low_bound, ultra_low*100/pair_num, up_bound, ultra_high*100/pair_num, low_bound, up_bound, 100-ultra_low*100/pair_num - ultra_high*100/pair_num)
-		print >>RS, 'fragsize=rep(c(' + ','.join(size) + '),' + 'times=c(' + ','.join(counts) + '))'
-		print >>RS, 'frag_sd = round(sd(fragsize))'
-		print >>RS, 'frag_mean = round(mean(fragsize))'
-		print >>RS, 'hist(fragsize,probability=T,breaks=%d,xlab="Fragment size (bp)",main=paste(c("Mean=",frag_mean,";","SD=",frag_sd),collapse=""),border="blue")' % len(window_left_bound)
-		print >>RS, "lines(density(fragsize,bw=%d),col='red')" % (2*step)
-		print >>RS ,"dev.off()"
+		print("pdf('gFragSize.pdf')", file=RS)
+		print("par(mfrow=c(2,1),cex.main=0.8,cex.lab=0.8,cex.axis=0.8,mar=c(4,4,4,1))", file=RS)
+		print('pie(c(%d,%d,%d),col=rainbow(3),cex=0.5,radius=1,main="Total %d fragments",labels=c("fraSize <= %d\\n(%4.2f%%)","fragSize > %d\\n(%4.2f%%)","%d < fragSize <= %d\\n(%4.2f%%)"), density=rep(80,80,80),angle=c(90,140,170))' % (ultra_low, ultra_high, pair_num -ultra_low -ultra_high, pair_num, low_bound, ultra_low*100/pair_num, up_bound, ultra_high*100/pair_num, low_bound, up_bound, 100-ultra_low*100/pair_num - ultra_high*100/pair_num), file=RS)
+		print('fragsize=rep(c(' + ','.join(size) + '),' + 'times=c(' + ','.join(counts) + '))', file=RS)
+		print('frag_sd = round(sd(fragsize))', file=RS)
+		print('frag_mean = round(mean(fragsize))', file=RS)
+		print('hist(fragsize,probability=T,breaks=%d,xlab="Fragment size (bp)",main=paste(c("Mean=",frag_mean,";","SD=",frag_sd),collapse=""),border="blue")' % len(window_left_bound), file=RS)
+		print("lines(density(fragsize,bw=%d),col='red')" % (2*step), file=RS)
+		print("dev.off()", file=RS)
 		FO.close()
 		FQ.close()
 		RS.close()
@@ -1668,7 +1676,7 @@ class QCSAM:
 		'''for each gene, check if its RPKM (epxresion level) has already been saturated or not'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			rpkm_file = self.fileName + ".eRPKM.xls"
@@ -1688,7 +1696,7 @@ class QCSAM:
 		#read SAM 
 		my_pat = re.compile(r'NH:i:(\d+)\b')
 		NH_tag=0
-		print >>sys.stderr, "Reading "+ self.fileName + '...',
+		print("Reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1701,13 +1709,13 @@ class QCSAM:
 			elif len(hitNum) ==1:
 				if int(hitNum[0])>1: continue				#skip multiple mapped reads
 			else:
-				print >>sys.stderr, "More than 1 NH tag found within a single line. Incorrect SAM format!"
+				print("More than 1 NH tag found within a single line. Incorrect SAM format!", file=sys.stderr)
 				sys.exit(1)
 
 			chrom = fields[2].upper()
 			chromStart = string.atoi(fields[3])-1
 			comb=[int(i) for i in ParseSAM._splicedHit_pat.findall(fields[5])]	#"9M4721N63M3157N8M" return ['9', '4721', '63', '3157', '8']
-			cUR_num += (len(comb) +1)/2
+			cUR_num += old_div((len(comb) +1),2)
 			blockStart=[]
 			blockSize=[]
 			
@@ -1718,16 +1726,16 @@ class QCSAM:
 				blockSize.append(comb[i])
 			
 			for st,size in zip(blockStart,blockSize):
-				mid = int(st) + (size/2)
+				mid = int(st) + (old_div(size,2))
 				block_list.append(chrom + ":" + str(mid))
 		
 		if NH_tag==1:
-			print >>sys.stderr, "Warn: NO NH tag found. Cannot determine uniqueness of alignment. All alignments will be used"
-		print >>sys.stderr, "Done"
+			print("Warn: NO NH tag found. Cannot determine uniqueness of alignment. All alignments will be used", file=sys.stderr)
+		print("Done", file=sys.stderr)
 		
-		print >>sys.stderr, "shuffling alignments ...",
+		print("shuffling alignments ...", end=' ', file=sys.stderr)
 		random.shuffle(block_list)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 		
 		ranges={}
@@ -1737,7 +1745,7 @@ class QCSAM:
 		rawCount_table=collections.defaultdict(list)
 		RPKM_head=['chr','start','end','name','score','strand']
 
-		tmp=range(sample_start,sample_end,sample_step)
+		tmp=list(range(sample_start,sample_end,sample_step))
 		tmp.append(100)
 		#=========================sampling uniquely mapped reads from population
 		for pertl in tmp:	#[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95,100]
@@ -1747,7 +1755,7 @@ class QCSAM:
 			sample_size += index_end -index_st
 			
 			RPKM_head.append(str(pertl) + '%')
-			print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(sample_size) + ") fragments ...",
+			print("sampling " + str(pertl) +"% (" + str(sample_size) + ") fragments ...", end=' ', file=sys.stderr)
 			for i in range(index_st, index_end):
 				(chr,coord) = block_list[i].split(':')
 				if chr not in ranges:
@@ -1766,14 +1774,14 @@ class QCSAM:
 					tx_end    = int( fields[2] )
 					geneName      = fields[3]
 					strand    = fields[5].replace(" ","_")
-					exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-					exon_starts = map((lambda x: x + tx_start ), exon_starts)
-					exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-					exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-					exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+					exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+					exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+					exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+					exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+					exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 					key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 				except:
-					print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line
+					print("[NOTE:input bed must be 12-column] skipped this line: " + line, file=sys.stderr)
 					continue
 				mRNA_count=0	#we need to initializ it to 0 for each gene
 				mRNA_len=sum(exon_sizes)
@@ -1781,24 +1789,24 @@ class QCSAM:
 					if chrom in ranges:
 						mRNA_count += len(ranges[chrom].find(st,end))		
 				if mRNA_len ==0:
-					print >>sys.stderr, geneName + " has 0 nucleotides. Exit!"
+					print(geneName + " has 0 nucleotides. Exit!", file=sys.stderr)
 					sys.exit(1)
 				if sample_size == 0:
-					print >>sys.stderr, "Too few reads to sample. Exit!"
+					print("Too few reads to sample. Exit!", file=sys.stderr)
 					sys.exit(1)
-				mRNA_RPKM = (mRNA_count * 1000000000.0)/(mRNA_len * sample_size)
+				mRNA_RPKM = old_div((mRNA_count * 1000000000.0),(mRNA_len * sample_size))
 				RPKM_table[key].append(str(mRNA_RPKM))
 				rawCount_table[key].append(str(mRNA_count))
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 
 		#self.f.seek(0)
-		print >>RPKM_OUT, '\t'.join(RPKM_head)
-		print >>RAW_OUT, '\t'.join(RPKM_head)
+		print('\t'.join(RPKM_head), file=RPKM_OUT)
+		print('\t'.join(RPKM_head), file=RAW_OUT)
 		for key in RPKM_table:
-			print >>RPKM_OUT, key + '\t',
-			print >>RPKM_OUT, '\t'.join(RPKM_table[key])
-			print >>RAW_OUT, key + '\t',
-			print >>RAW_OUT, '\t'.join(rawCount_table[key])			
+			print(key + '\t', end=' ', file=RPKM_OUT)
+			print('\t'.join(RPKM_table[key]), file=RPKM_OUT)
+			print(key + '\t', end=' ', file=RAW_OUT)
+			print('\t'.join(rawCount_table[key]), file=RAW_OUT)			
 
 	def saturation_junction(self,refgene,outfile=None,sample_start=5,sample_step=5,sample_end=100,min_intron=50,recur=1):
 		'''check if an RNA-seq experiment is saturated in terms of detecting known splicing junction'''
@@ -1808,7 +1816,7 @@ class QCSAM:
 		else:
 			out_file = outfile + ".junctionSaturation_plot.r"
 		if refgene is None:
-			print >>sys.stderr, "You must provide reference gene model in bed format."
+			print("You must provide reference gene model in bed format.", file=sys.stderr)
 			sys.exit(1)
 		
 		OUT = open(out_file,'w')
@@ -1816,12 +1824,12 @@ class QCSAM:
 
 		#reading reference gene 
 		knownSpliceSites= set()
-		print >>sys.stderr, "reading reference bed file: ",refgene, " ... ",
+		print("reading reference bed file: ",refgene, " ... ", end=' ', file=sys.stderr)
 		for line in open(refgene,'r'):
 			if line.startswith(('#','track','browser')):continue  
 			fields = line.split()
 			if(len(fields)<12):
-				print >>sys.stderr, "Invalid bed line (skipped):",line,
+				print("Invalid bed line (skipped):",line, end=' ', file=sys.stderr)
 				continue
 			chrom     = fields[0].upper()
 			tx_start = int( fields[1] )
@@ -1829,15 +1837,15 @@ class QCSAM:
 			if int(fields[9] ==1):
 				continue    	
 			
-			exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-			exon_starts = map((lambda x: x + tx_start ), exon_starts)
-			exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-			exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+			exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+			exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+			exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+			exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			intron_start = exon_ends[:-1]
 			intron_end=exon_starts[1:]
 			for st,end in zip (intron_start, intron_end):
 				knownSpliceSites.add(chrom + ":" + str(st) + "-" + str(end))
-		print >>sys.stderr,"Done! Total "+str(len(knownSpliceSites)) + " known splicing sites"
+		print("Done! Total "+str(len(knownSpliceSites)) + " known splicing sites", file=sys.stderr)
 
 
 		#read SAM file
@@ -1845,7 +1853,7 @@ class QCSAM:
 		intron_start=[]
 		intron_end=[]
 		uniqSpliceSites=collections.defaultdict(int)
-		print >>sys.stderr, "Reading "+ self.fileName + '...',
+		print("Reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -1886,13 +1894,13 @@ class QCSAM:
 			for st,end in zip(intron_st, intron_end):
 				samSpliceSites.append(chrom + ":" + str(st) + "-" + str(end))			
 		#self.f.seek(0)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 
 
-		print >>sys.stderr, "shuffling alignments ...",
+		print("shuffling alignments ...", end=' ', file=sys.stderr)
 		random.shuffle(samSpliceSites)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 				
 		#resampling
 		SR_num = len(samSpliceSites)
@@ -1901,35 +1909,35 @@ class QCSAM:
 		known_junc=[]
 		all_junc=[]
 		#=========================sampling uniquely mapped reads from population
-		tmp=range(sample_start,sample_end,sample_step)
+		tmp=list(range(sample_start,sample_end,sample_step))
 		tmp.append(100)
 		for pertl in tmp:	#[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95,100]
 			knownSpliceSites_num = 0
-			index_st = int(SR_num * ((pertl - sample_step)/100.0))
-			index_end = int(SR_num * (pertl/100.0))
+			index_st = int(SR_num * (old_div((pertl - sample_step),100.0)))
+			index_end = int(SR_num * (old_div(pertl,100.0)))
 			if index_st < 0: index_st = 0
 			sample_size += index_end -index_st
 			
-			print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(sample_size) + ") unique splicing alignments ...",
+			print("sampling " + str(pertl) +"% (" + str(sample_size) + ") unique splicing alignments ...", end=' ', file=sys.stderr)
 			for i in range(index_st, index_end):
 				uniqSpliceSites[samSpliceSites[i]] +=1	
-			all_junc.append(str(len(uniqSpliceSites.keys())))
+			all_junc.append(str(len(list(uniqSpliceSites.keys()))))
 			for sj in uniqSpliceSites:
 				if sj in knownSpliceSites and uniqSpliceSites[sj] >= recur:
 					knownSpliceSites_num +=1
-			print >>sys.stderr, str(knownSpliceSites_num) + " known splicing junctions"
+			print(str(knownSpliceSites_num) + " known splicing junctions", file=sys.stderr)
 			known_junc.append(str(knownSpliceSites_num))
 			
 		#for j in uniq_SJ:
 			#print >>OUT, j + "\t" + str(uniq_SJ[j])
-		print >>OUT, "pdf('junction_saturation.pdf')"
-		print >>OUT, "x=c(" + ','.join([str(i) for i in tmp]) + ')'
-		print >>OUT, "y=c(" + ','.join(known_junc) + ')'
-		print >>OUT, "z=c(" + ','.join(all_junc) + ')'
-		print >>OUT, "plot(x,z/1000,xlab='percent of total reads',ylab='Number of splicing junctions (x1000)',type='o',col='blue',ylim=c(%d,%d))" % (int(int(known_junc[0])/1000), int(int(all_junc[-1])/1000))
-		print >>OUT, "points(x,y/1000,type='o',col='red')"
-		print >>OUT, 'legend(5,%d, legend=c("All detected junction","Annotated junction"),col=c("blue","red"),lwd=1,pch=1)' % int(int(all_junc[-1])/1000)
-		print >>OUT, "dev.off()"
+		print("pdf('junction_saturation.pdf')", file=OUT)
+		print("x=c(" + ','.join([str(i) for i in tmp]) + ')', file=OUT)
+		print("y=c(" + ','.join(known_junc) + ')', file=OUT)
+		print("z=c(" + ','.join(all_junc) + ')', file=OUT)
+		print("plot(x,z/1000,xlab='percent of total reads',ylab='Number of splicing junctions (x1000)',type='o',col='blue',ylim=c(%d,%d))" % (int(old_div(int(known_junc[0]),1000)), int(old_div(int(all_junc[-1]),1000))), file=OUT)
+		print("points(x,y/1000,type='o',col='red')", file=OUT)
+		print('legend(5,%d, legend=c("All detected junction","Annotated junction"),col=c("blue","red"),lwd=1,pch=1)' % int(old_div(int(all_junc[-1]),1000)), file=OUT)
+		print("dev.off()", file=OUT)
 
 	
 	def annotate_junction(self,refgene,outfile=None,min_intron=50):
@@ -1944,7 +1952,7 @@ class QCSAM:
 			out_file = outfile + ".junction.xls"
 			out_file2 = outfile + ".junction_plot.r"
 		if refgene is None:
-			print >>sys.stderr, "You must provide reference gene model in bed format."
+			print("You must provide reference gene model in bed format.", file=sys.stderr)
 			sys.exit(1)
 		OUT = open(out_file,'w')
 		ROUT = open(out_file2,'w')
@@ -1958,13 +1966,13 @@ class QCSAM:
 		known_junc =0
 		splicing_events=collections.defaultdict(int)	
 		
-		print >>sys.stderr, "\treading reference bed file: ",refgene, " ... ",
+		print("\treading reference bed file: ",refgene, " ... ", end=' ', file=sys.stderr)
 		for line in open(refgene,'r'):
 			if line.startswith(('#','track','browser')):continue  
            	# Parse fields from gene tabls
 			fields = line.split()
 			if(len(fields)<12):
-				print >>sys.stderr, "Invalid bed line (skipped):",line,
+				print("Invalid bed line (skipped):",line, end=' ', file=sys.stderr)
 				continue
 			chrom     = fields[0].upper()
 			tx_start = int( fields[1] )
@@ -1972,19 +1980,19 @@ class QCSAM:
 			if int(fields[9] ==1):
 				continue    	
 			
-			exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-			exon_starts = map((lambda x: x + tx_start ), exon_starts)
-			exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-			exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+			exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+			exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+			exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+			exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			intron_start = exon_ends[:-1]
 			intron_end=exon_starts[1:]
 			for i_st,i_end in zip (intron_start, intron_end):
 				refIntronStarts[chrom][i_st] =i_st
 				refIntronEnds[chrom][i_end] =i_end			
-		print >>sys.stderr,"Done"
+		print("Done", file=sys.stderr)
 		
 		#reading input SAM file
-		print >>sys.stderr, "\tProcessing "+ self.fileName + '...',
+		print("\tProcessing "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -2011,7 +2019,7 @@ class QCSAM:
 			if flag ==1:
 				continue		
 			
-			total_junc += (len(comb) -1)/2
+			total_junc += old_div((len(comb) -1),2)
 			for i in range(0,len(comb),2):
 				blockStart.append(chromStart + sum(comb[:i]) )
 				
@@ -2025,25 +2033,25 @@ class QCSAM:
 			intron_end = blockStart[1:]
 			for i_st,i_end in zip(intron_st, intron_end):
 				splicing_events[chrom + ":" + str(i_st) + ":" + str(i_end)] += 1
-				if (refIntronStarts[chrom].has_key(i_st) and refIntronEnds[chrom].has_key(i_end)):
+				if (i_st in refIntronStarts[chrom] and i_end in refIntronEnds[chrom]):
 					known_junc +=1																		#known both
-				elif (not refIntronStarts[chrom].has_key(i_st) and not refIntronEnds[chrom].has_key(i_end)):
+				elif (i_st not in refIntronStarts[chrom] and i_end not in refIntronEnds[chrom]):
 					novel35_junc +=1																
 				else:
 					novel3or5_junc +=1
 		#self.f.seek(0)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
-		print >>ROUT, 'pdf("splicing_events_pie.pdf")'
-		print >>ROUT, "events=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc)])+ ')'
-		print >>ROUT, 'pie(events,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing events",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc))
-		print >>ROUT, "dev.off()"
+		print('pdf("splicing_events_pie.pdf")', file=ROUT)
+		print("events=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc)])+ ')', file=ROUT)
+		print('pie(events,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing events",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc)), file=ROUT)
+		print("dev.off()", file=ROUT)
 		
-		print >>sys.stderr, "\n==================================================================="
-		print >>sys.stderr, "Total splicing  Events:\t" + str(total_junc)
-		print >>sys.stderr, "Known Splicing Events:\t" + str(known_junc)
-		print >>sys.stderr, "Partial Novel Splicing Events:\t" + str(novel3or5_junc)
-		print >>sys.stderr, "Novel Splicing Events:\t" + str(novel35_junc)
+		print("\n===================================================================", file=sys.stderr)
+		print("Total splicing  Events:\t" + str(total_junc), file=sys.stderr)
+		print("Known Splicing Events:\t" + str(known_junc), file=sys.stderr)
+		print("Partial Novel Splicing Events:\t" + str(novel3or5_junc), file=sys.stderr)
+		print("Novel Splicing Events:\t" + str(novel35_junc), file=sys.stderr)
 		
 		#reset variables
 		total_junc =0
@@ -2051,34 +2059,34 @@ class QCSAM:
 		novel3or5_junc =0
 		known_junc =0
 		
-		print >>OUT, "chrom\tintron_st(0-based)\tintron_end(1-based)\tread_count\tannotation"
+		print("chrom\tintron_st(0-based)\tintron_end(1-based)\tread_count\tannotation", file=OUT)
 		for i in splicing_events:
 			total_junc += 1
 			(chrom, i_st, i_end) = i.split(":")
-			print >>OUT, '\t'.join([chrom.replace("CHR","chr"),i_st,i_end]) + '\t' + str(splicing_events[i]) + '\t',
+			print('\t'.join([chrom.replace("CHR","chr"),i_st,i_end]) + '\t' + str(splicing_events[i]) + '\t', end=' ', file=OUT)
 			i_st = int(i_st)
 			i_end = int(i_end)
-			if (refIntronStarts[chrom].has_key(i_st) and refIntronEnds[chrom].has_key(i_end)):
-				print >>OUT, "annotated"
+			if (i_st in refIntronStarts[chrom] and i_end in refIntronEnds[chrom]):
+				print("annotated", file=OUT)
 				known_junc +=1
-			elif (not refIntronStarts[chrom].has_key(i_st) and not refIntronEnds[chrom].has_key(i_end)):
-				print >>OUT, 'complete_novel'
+			elif (i_st not in refIntronStarts[chrom] and i_end not in refIntronEnds[chrom]):
+				print('complete_novel', file=OUT)
 				novel35_junc +=1
 			else:
-				print >>OUT, 'partial_novel'
+				print('partial_novel', file=OUT)
 				novel3or5_junc +=1
 		
 		
-		print >>sys.stderr, "\nTotal splicing  Junctions:\t" + str(total_junc)
-		print >>sys.stderr, "Known Splicing Junctions:\t" + str(known_junc)
-		print >>sys.stderr, "Partial Novel Splicing Junctions:\t" + str(novel3or5_junc)
-		print >>sys.stderr, "Novel Splicing Junctions:\t" + str(novel35_junc)
-		print >>sys.stderr, "\n==================================================================="
+		print("\nTotal splicing  Junctions:\t" + str(total_junc), file=sys.stderr)
+		print("Known Splicing Junctions:\t" + str(known_junc), file=sys.stderr)
+		print("Partial Novel Splicing Junctions:\t" + str(novel3or5_junc), file=sys.stderr)
+		print("Novel Splicing Junctions:\t" + str(novel35_junc), file=sys.stderr)
+		print("\n===================================================================", file=sys.stderr)
 		
-		print >>ROUT, 'pdf("splicing_junction_pie.pdf")'
-		print >>ROUT, "junction=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc,)])+ ')'
-		print >>ROUT, 'pie(junction,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing junctions",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc))
-		print >>ROUT, "dev.off()"
+		print('pdf("splicing_junction_pie.pdf")', file=ROUT)
+		print("junction=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc,)])+ ')', file=ROUT)
+		print('pie(junction,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing junctions",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc)), file=ROUT)
+		print("dev.off()", file=ROUT)
 		#print >>ROUT, "mat=matrix(c(events,junction),byrow=T,ncol=3)"
 		#print >>ROUT, 'barplot(mat,beside=T,ylim=c(0,100),names=c("known","partial\nnovel","complete\nnovel"),legend.text=c("splicing events","splicing junction"),ylab="Percent")'
 
@@ -2086,7 +2094,7 @@ class QCSAM:
 		'''calculate mRNA's RPKM value'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if outfile is None:
 			rpkm_file = self.fileName + ".RPKM.xls"
@@ -2104,7 +2112,7 @@ class QCSAM:
 		RPKM_head=['chr','start','end','name','score','strand','length','rawCount','RPKM']		
 	
 		#read SAM 
-		print >>sys.stderr, "Reading "+ self.fileName + '...',
+		print("Reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -2117,7 +2125,7 @@ class QCSAM:
 			chrom = fields[2].upper()
 			chromStart = string.atoi(fields[3])-1
 			comb=[int(i) for i in ParseSAM._splicedHit_pat.findall(fields[5])]	#"9M4721N63M3157N8M" return ['9', '4721', '63', '3157', '8']
-			cUR_num += (len(comb) +1)/2
+			cUR_num += old_div((len(comb) +1),2)
 			blockStart=[]
 			blockSize=[]
 			
@@ -2128,16 +2136,16 @@ class QCSAM:
 				blockSize.append(comb[i])
 			
 			for st,size in zip(blockStart,blockSize):
-				mid = int(st) + (size/2)
+				mid = int(st) + (old_div(size,2))
 				if chrom not in ranges:
 					ranges[chrom] = Intersecter()
 				else:
 					ranges[chrom].add_interval( Interval( mid, mid ) )
 					
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 
 		
-		print >>sys.stderr, "Calculating RPKM ...",
+		print("Calculating RPKM ...", end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue  
@@ -2148,33 +2156,33 @@ class QCSAM:
 				tx_end    = int( fields[2] )
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-				exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+				exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 				key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, file=sys.stderr)
 				continue
 			mRNA_count=0	#we need to initializ it to 0 for each gene
 			mRNA_len=sum(exon_sizes)
 			for st,end in zip(exon_starts,exon_ends):
 				if chrom in ranges:
 					mRNA_count += len(ranges[chrom].find(st,end))					
-			mRNA_RPKM = (mRNA_count * 1000000000.0)/(mRNA_len * cUR_num)
+			mRNA_RPKM = old_div((mRNA_count * 1000000000.0),(mRNA_len * cUR_num))
 			
 			mRNAlen_table[key] = mRNA_len
 			RPKM_table[key] = str(mRNA_RPKM)
 			rawCount_table[key] = str(mRNA_count)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
-		print >>RPKM_OUT, '\t'.join(RPKM_head)
+		print('\t'.join(RPKM_head), file=RPKM_OUT)
 		for k in RPKM_table:
-			print >>RPKM_OUT, k + '\t',
-			print >>RPKM_OUT, str(mRNAlen_table[k]) + '\t',
-			print >>RPKM_OUT, str(rawCount_table[k]) + '\t',
-			print >>RPKM_OUT, str(RPKM_table[k]) + '\t'
+			print(k + '\t', end=' ', file=RPKM_OUT)
+			print(str(mRNAlen_table[k]) + '\t', end=' ', file=RPKM_OUT)
+			print(str(rawCount_table[k]) + '\t', end=' ', file=RPKM_OUT)
+			print(str(RPKM_table[k]) + '\t', file=RPKM_OUT)
 		return RPKM_table
 		self.f.seek(0)	
 
@@ -2183,10 +2191,10 @@ class QCSAM:
 		use the parental gene as standard, for spliced read, use the splicing motif as strandard'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		if genome is None:
-			print >>sys.stderr,"You must specify genome sequence in fasta format\n"
+			print("You must specify genome sequence in fasta format\n", file=sys.stderr)
 			exit(0)
 		
 		if outfile is None:
@@ -2194,19 +2202,19 @@ class QCSAM:
 		else:
 			strand_file = outfile + ".strand.infor"		
 		OUT = open(strand_file,'w')
-		print >>OUT,"read_type\tread_id\tread_seq\tchr\tStart\tCigar\tprotocol_strand\tgene_strand"	
+		print("read_type\tread_id\tread_seq\tchr\tStart\tCigar\tprotocol_strand\tgene_strand", file=OUT)	
 		
 		transtab = string.maketrans("ACGTNX","TGCANX")
 		motif=sp.upper().split(',')
 		motif_rev = [m.translate(transtab)[::-1] for m in motif]
 		
 		#load genome
-		print >>sys.stderr, "\tloading "+genome+'...'
+		print("\tloading "+genome+'...', file=sys.stderr)
 		tmp=fasta.Fasta(genome)
 		
 		#load reference gene model
 		gene_ranges={}
-		print >>sys.stderr, "reading reference gene model ...",
+		print("reading reference gene model ...", end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue  
@@ -2218,12 +2226,12 @@ class QCSAM:
 				geneName      = fields[3]
 				strand    = fields[5]
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, file=sys.stderr)
 				continue
 			if chrom not in gene_ranges:
 				gene_ranges[chrom]=Intersecter()
 			gene_ranges[chrom].insert(tx_start,tx_end,strand)							
-		print >>sys.stderr, "Done"		
+		print("Done", file=sys.stderr)		
 
 		#read SAM 
 		
@@ -2231,7 +2239,7 @@ class QCSAM:
 		strand_from_protocol = 'unknown'
 		strand_from_gene='unknown'
 		strand_stat=collections.defaultdict(int)
-		print >>sys.stderr, "Reading "+ self.fileName + '...',
+		print("Reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -2261,8 +2269,8 @@ class QCSAM:
 					else:
 						strand_from_gene="intergenic"
 				
-				print >>OUT,read_type + '\t' + fields[0] + '\t' + fields[9] + '\t' + fields[2] + '\t' + fields[3] + '\t' + fields[5] +'\t',
-				print >>OUT,strand_from_protocol + '\t' + strand_from_gene		  
+				print(read_type + '\t' + fields[0] + '\t' + fields[9] + '\t' + fields[2] + '\t' + fields[3] + '\t' + fields[5] +'\t', end=' ', file=OUT)
+				print(strand_from_protocol + '\t' + strand_from_gene, file=OUT)		  
 		 		strand_stat[read_type + '\t' + strand_from_protocol +'\t' + strand_from_gene] +=1  
 
 
@@ -2276,14 +2284,14 @@ class QCSAM:
 					blockStart.append(readStart + sum(comb[:i]) )
 				for i in range(0,len(comb),2):
 					blockSize.append(comb[i])
-				blockEnd=map((lambda x,y:x+y),blockStart,blockSize)
+				blockEnd=list(map((lambda x,y:x+y),blockStart,blockSize))
 				intron_start=blockEnd[:-1]
 				intron_end=blockStart[1:]
 				for st,end in zip(intron_start,intron_end):
 					try:
 						splice_motif = str(tmp.fetchSeq(chrom, st, st+2)) + str(tmp.fetchSeq(chrom, end-2,end))
 					except:
-							print line
+							print(line)
 					if splice_motif in motif:
 						splice_strand.append('+')
 					elif splice_motif in motif_rev:
@@ -2296,16 +2304,16 @@ class QCSAM:
 						strand_from_splice = 'unknown motif'
 				else:
 						strand_from_splice = set(splice_strand).pop()
-				print >>OUT,read_type + '\t' + fields[0] + '\t' + fields[9] + '\t' + fields[2] + '\t' + fields[3] + '\t' + fields[5] +'\t',
-				print >>OUT,strand_from_protocol + '\t' + strand_from_splice
+				print(read_type + '\t' + fields[0] + '\t' + fields[9] + '\t' + fields[2] + '\t' + fields[3] + '\t' + fields[5] +'\t', end=' ', file=OUT)
+				print(strand_from_protocol + '\t' + strand_from_splice, file=OUT)
 				
 				strand_stat[read_type + '\t' + strand_from_protocol +'\t' + strand_from_splice] +=1
 							
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
-		print "read_type\tstrand_expected\tstrand_observed\tcount"
+		print("read_type\tstrand_expected\tstrand_observed\tcount")
 		for i in sorted(strand_stat):
-				print str(i) +'\t' + str(strand_stat[i])
+				print(str(i) +'\t' + str(strand_stat[i]))
 		
 	def clipping_profile(self,outfile=None):
 		'''calculate profile of soft clipping'''
@@ -2318,7 +2326,7 @@ class QCSAM:
 		
 		OUT=open(out_file1,'w')
 		ROUT=open(out_file2,'w')
-		print >>OUT, "Position\tRead_Total\tRead_clipped"
+		print("Position\tRead_Total\tRead_clipped", file=OUT)
 		soft_p = re.compile(r'(.*?)(\d+)S')
 		read_part = re.compile(r'(\d+)[MIS=X]')
 		total_read =0
@@ -2327,7 +2335,7 @@ class QCSAM:
 		
 		read_pos=[]
 		clip_count=[]
-		print >>sys.stderr, "Reading "+ self.fileName + '...'
+		print("Reading "+ self.fileName + '...', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -2352,12 +2360,12 @@ class QCSAM:
 		for i in soft_clip_profile:
 			read_pos.append(str(i))
 			clip_count.append(str(soft_clip_profile[i]))
-			print >>OUT, str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i])
-		print >>ROUT, "pdf('clipping_profile.pdf')"
-		print >>ROUT, "read_pos=c(" + ','.join(read_pos) + ')'
-		print >>ROUT, "count=c(" + ','.join(clip_count) + ')'
-		print >>ROUT, 'plot(read_pos,1-(count/%d),col="blue",main="clipping profile",xlab="Position of reads",ylab="Mappability",type="b")' % total_read
-		print >>ROUT, "dev.off()"
+			print(str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i]), file=OUT)
+		print("pdf('clipping_profile.pdf')", file=ROUT)
+		print("read_pos=c(" + ','.join(read_pos) + ')', file=ROUT)
+		print("count=c(" + ','.join(clip_count) + ')', file=ROUT)
+		print('plot(read_pos,1-(count/%d),col="blue",main="clipping profile",xlab="Position of reads",ylab="Mappability",type="b")' % total_read, file=ROUT)
+		print("dev.off()", file=ROUT)
 		
 	def insertion_profile(self,read_len,outfile=None):
 		'''calculate profile of insertion (insertion means insertion to the reference)'''
@@ -2370,13 +2378,13 @@ class QCSAM:
 		
 		OUT=open(out_file1,'w')
 		ROUT=open(out_file2,'w')
-		print >>OUT, "Position\tRead_Total\tRead_clipped"
+		print("Position\tRead_Total\tRead_clipped", file=OUT)
 		soft_p = re.compile(r'(.*?)(\d+)I')
 		read_part = re.compile(r'(\d+)[MIS=X]')
 		total_read =0
 		skip_part_of_read =0
 		soft_clip_profile=collections.defaultdict(int)
-		print >>sys.stderr, "Reading "+ self.fileName + '...',
+		print("Reading "+ self.fileName + '...', end=' ', file=sys.stderr)
 		for line in self.f:
 			if line.startswith("@"):continue
 			fields=line.rstrip('\n ').split()
@@ -2399,9 +2407,9 @@ class QCSAM:
 						soft_clip_profile[n]+=1
 					skip_part_of_read += int(j[1])
 		for i in range(0,read_len):
-			print >>OUT, str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i])
+			print(str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i]), file=OUT)
 
-class ParseBAM:
+class ParseBAM(object):
 	'''This class provides fuctions to parsing/processing/transforming SAM or BAM files. The input
 	file could be either SAM or BAM format file'''
 	
@@ -2411,13 +2419,13 @@ class ParseBAM:
 		try:
 			self.samfile = pysam.Samfile(inputFile,'rb')
 			if len(self.samfile.header) ==0:
-				print >>sys.stderr, "BAM/SAM file has no header section. Exit!"
+				print("BAM/SAM file has no header section. Exit!", file=sys.stderr)
 				sys.exit(1)
 			self.bam_format = True
 		except:
 			self.samfile = pysam.Samfile(inputFile,'r')
 			if len(self.samfile.header) ==0:
-				print >>sys.stderr, "BAM/SAM file has no header section. Exit!"
+				print("BAM/SAM file has no header section. Exit!", file=sys.stderr)
 				sys.exit(1)
 			self.bam_format = False
 
@@ -2440,13 +2448,13 @@ class ParseBAM:
 		R_splice=0
 		R_properPair =0 
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				R_total +=1
 				if aligned_read.is_qcfail:			#skip QC fail read
 					R_qc_fail +=1
@@ -2490,26 +2498,26 @@ class ParseBAM:
 						R_properPair +=1
 				
 		except StopIteration:
-			print >>sys.stderr, "Done"		
+			print("Done", file=sys.stderr)		
 		#self.samfile.seek(current_pos)
 				
-		print >>sys.stderr,"\n#=================================================="
-		print >>sys.stderr, "%-30s%d" % ("Total Reads (Records):",R_total)
-		print >>sys.stderr, "\n",
-		print >>sys.stderr, "%-30s%d" % ("QC failed:",R_qc_fail)
-		print >>sys.stderr, "%-30s%d" % ("Optical/PCR duplicate:", R_duplicate)
-		print >>sys.stderr, "%-30s%d" % ("Non Primary Hits", R_nonprimary)
-		print >>sys.stderr, "%-30s%d" % ("Unmapped reads:",R_unmap)
-		print >>sys.stderr, "%-30s%d" % ("Multiple mapped reads:",R_multipleHit)
-		print >>sys.stderr, "\n",
-		print >>sys.stderr, "%-30s%d" % ("Uniquely mapped:",R_uniqHit)
-		print >>sys.stderr, "%-30s%d" % ("Read-1:",R_read1)
-		print >>sys.stderr, "%-30s%d" % ("Read-2:",R_read2)
-		print >>sys.stderr, "%-30s%d" % ("Reads map to '+':",R_forward)
-		print >>sys.stderr, "%-30s%d" % ("Reads map to '-':",R_reverse)
-		print >>sys.stderr, "%-30s%d" % ("Non-splice reads:",R_nonSplice)
-		print >>sys.stderr, "%-30s%d" % ("Splice reads:",R_splice)	
-		print >>sys.stderr, "%-30s%d" % ("Reads mapped in proper pairs:",R_properPair)
+		print("\n#==================================================", file=sys.stderr)
+		print("%-30s%d" % ("Total Reads (Records):",R_total), file=sys.stderr)
+		print("\n", end=' ', file=sys.stderr)
+		print("%-30s%d" % ("QC failed:",R_qc_fail), file=sys.stderr)
+		print("%-30s%d" % ("Optical/PCR duplicate:", R_duplicate), file=sys.stderr)
+		print("%-30s%d" % ("Non Primary Hits", R_nonprimary), file=sys.stderr)
+		print("%-30s%d" % ("Unmapped reads:",R_unmap), file=sys.stderr)
+		print("%-30s%d" % ("Multiple mapped reads:",R_multipleHit), file=sys.stderr)
+		print("\n", end=' ', file=sys.stderr)
+		print("%-30s%d" % ("Uniquely mapped:",R_uniqHit), file=sys.stderr)
+		print("%-30s%d" % ("Read-1:",R_read1), file=sys.stderr)
+		print("%-30s%d" % ("Read-2:",R_read2), file=sys.stderr)
+		print("%-30s%d" % ("Reads map to '+':",R_forward), file=sys.stderr)
+		print("%-30s%d" % ("Reads map to '-':",R_reverse), file=sys.stderr)
+		print("%-30s%d" % ("Non-splice reads:",R_nonSplice), file=sys.stderr)
+		print("%-30s%d" % ("Splice reads:",R_splice), file=sys.stderr)	
+		print("%-30s%d" % ("Reads mapped in proper pairs:",R_properPair), file=sys.stderr)
 	
 	def configure_experiment(self,refbed,sample_size = 200000):
 		'''Given a BAM/SAM file, this function will try to guess the RNA-seq experiment:
@@ -2524,7 +2532,7 @@ class ParseBAM:
 		s_strandness=collections.defaultdict(int)
 		#load reference gene model
 		gene_ranges={}
-		print >>sys.stderr, "Reading reference gene model " + refbed + ' ...',
+		print("Reading reference gene model " + refbed + ' ...', end=' ', file=sys.stderr)
 		for line in open(refbed,'r'):
 			try:
 				if line.startswith(('#','track','browser')):continue  
@@ -2536,22 +2544,22 @@ class ParseBAM:
 				geneName      = fields[3]
 				strand    = fields[5]
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, file=sys.stderr)
 				continue
 			if chrom not in gene_ranges:
 				gene_ranges[chrom]=Intersecter()
 			gene_ranges[chrom].insert(tx_start,tx_end,strand)							
-		print >>sys.stderr, "Done"		
+		print("Done", file=sys.stderr)		
 		
 		#read SAM/BAM file
 		#current_pos = self.samfile.tell()
-		print >>sys.stderr, "Loading SAM/BAM file ... ",
+		print("Loading SAM/BAM file ... ", end=' ', file=sys.stderr)
 		try:
 			while(1):
 				if count >= sample_size:
 					break
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:			#skip low quanlity
 					continue
 				if aligned_read.is_duplicate:		#skip duplicate read
@@ -2599,10 +2607,10 @@ class ParseBAM:
 							count += 1
 
 		except StopIteration:
-			print >>sys.stderr, "Finished"		
+			print("Finished", file=sys.stderr)		
 		#self.samfile.seek(current_pos)
 		
-		print >>sys.stderr, "Total " + str(count) + " usable reads were sampled"
+		print("Total " + str(count) + " usable reads were sampled", file=sys.stderr)
 		protocol="unknown"
 		strandness=None
 		spec1=0.0
@@ -2612,16 +2620,16 @@ class ParseBAM:
 			protocol="PairEnd"
 			#for k,v in p_strandness.items():
 			#	print >>sys.stderr, k + '\t' + str(v)
-			spec1= (p_strandness['1++'] + p_strandness['1--'] + p_strandness['2+-'] + p_strandness['2-+'])/float(sum(p_strandness.values()))
-			spec2= (p_strandness['1+-'] + p_strandness['1-+'] + p_strandness['2++'] + p_strandness['2--'])/float(sum(p_strandness.values()))
+			spec1= old_div((p_strandness['1++'] + p_strandness['1--'] + p_strandness['2+-'] + p_strandness['2-+']),float(sum(p_strandness.values())))
+			spec2= old_div((p_strandness['1+-'] + p_strandness['1-+'] + p_strandness['2++'] + p_strandness['2--']),float(sum(p_strandness.values())))
 			other = 1-spec1-spec2
 			
 		elif len(s_strandness) >0 and len(p_strandness) ==0 :
 			protocol="SingleEnd"
 			#for k,v in s_strandness.items():
 			#	print  >>sys.stderr, k + '\t' + str(v)
-			spec1 = (s_strandness['++'] + s_strandness['--'])/float(sum(s_strandness.values()))
-			spec2 = (s_strandness['+-'] + s_strandness['-+'])/float(sum(s_strandness.values()))
+			spec1 = old_div((s_strandness['++'] + s_strandness['--']),float(sum(s_strandness.values())))
+			spec2 = old_div((s_strandness['+-'] + s_strandness['-+']),float(sum(s_strandness.values())))
 			other = 1-spec1-spec2
 		else:
 			protocol="Mixture"
@@ -2643,7 +2651,7 @@ class ParseBAM:
 		elif len(strand_rule.split(',')) ==2:									#singeEnd, strand-specific
 			for i in strand_rule.split(','):strandRule[i[0]]=i[1]
 		else:
-			print >>sys.stderr, "Unknown value of option :'strand_rule' " + strand_rule
+			print("Unknown value of option :'strand_rule' " + strand_rule, file=sys.stderr)
 			sys.exit(1)
 		if len(strandRule) == 0:
 			FWO = open(outfile + '.wig','w')
@@ -2653,13 +2661,13 @@ class ParseBAM:
 		
 		
 		read_id=''
-		for chr_name, chr_size in chrom_sizes.items():		#iterate each chrom
+		for chr_name, chr_size in list(chrom_sizes.items()):		#iterate each chrom
 			try:
 				self.samfile.fetch(chr_name,0,chr_size)
 			except:
-				print >>sys.stderr, "No alignments for " + chr_name + '. skipped'
+				print("No alignments for " + chr_name + '. skipped', file=sys.stderr)
 				continue
-			print >>sys.stderr, "Processing " + chr_name + " ..."
+			print("Processing " + chr_name + " ...", file=sys.stderr)
 			if len(strandRule) == 0: FWO.write('variableStep chrom='+chr_name+'\n')
 			else:
 				FWO.write('variableStep chrom='+chr_name+'\n')
@@ -2702,12 +2710,12 @@ class ParseBAM:
 					
 			if len(strandRule) == 0:							#this is NOT strand specific.
 				for pos in sorted (Fwig.keys()):
-					print >>FWO, "%d\t%.2f" % (pos,Fwig[pos])
+					print("%d\t%.2f" % (pos,Fwig[pos]), file=FWO)
 			else:
 				for pos in sorted (Fwig.keys()):
-					print >>FWO, "%d\t%.2f" % (pos,Fwig[pos])
+					print("%d\t%.2f" % (pos,Fwig[pos]), file=FWO)
 				for pos in sorted (Rwig.keys()):
-					print >>RVO, "%d\t%.2f" % (pos,Rwig[pos])
+					print("%d\t%.2f" % (pos,Rwig[pos]), file=RVO)
 				
 					
 	def calculate_rpkm(self,geneFile,outfile,strand_rule=None):
@@ -2735,7 +2743,7 @@ class ParseBAM:
 		elif len(strand_rule.split(',')) ==2:									#singeEnd, strand-specific
 			for i in strand_rule.split(','):strandRule[i[0]]=i[1]
 		else:
-			print >>sys.stderr, "Unknown value of option :'strand_rule' " + strand_rule
+			print("Unknown value of option :'strand_rule' " + strand_rule, file=sys.stderr)
 			sys.exit(1)
 		
 		uniq_read=0
@@ -2747,14 +2755,14 @@ class ParseBAM:
 		rpkm_value={}
 		
 		RPKM_OUT = open(outfile,'w')
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 		
 		#current_pos = self.samfile.tell()
 		try:
 			while(1):
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -2789,26 +2797,26 @@ class ParseBAM:
 				if strand_rule is not None:	
 					if strandRule[strand_key] == '+':
 						for block in exon_blocks:
-							mid = block[1] + int((block[2] - block[1])/2)
+							mid = block[1] + int(old_div((block[2] - block[1]),2))
 							if chrom not in plus_ranges:plus_ranges[chrom] = Intersecter()
 							else:plus_ranges[chrom].add_interval( Interval( mid,mid+1 ) )
 					elif strandRule[strand_key] == '-':
 						for block in exon_blocks:
-							mid = block[1] + int((block[2] - block[1])/2)
+							mid = block[1] + int(old_div((block[2] - block[1]),2))
 							if chrom not in minus_ranges:minus_ranges[chrom] = Intersecter()	
 							else:minus_ranges[chrom].add_interval( Interval( mid,mid+1 ) )
 				elif strand_rule is None:	
 					for block in exon_blocks:
-						mid = block[1] + int((block[2] - block[1])/2)
+						mid = block[1] + int(old_div((block[2] - block[1]),2))
 						if chrom not in unstrand_ranges:unstrand_ranges[chrom] = Intersecter()
 						else:unstrand_ranges[chrom].add_interval( Interval( mid,mid+1 ) )
 					
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		#self.samfile.seek(current_pos)
-		print >>RPKM_OUT, "#Total uniquely mapped reads = " + str(uniq_read)
-		print >>RPKM_OUT, "#Total fragments = " + str(total_tags)
-		print >>sys.stderr, "Assign reads to "+ geneFile + '...',
+		print("#Total uniquely mapped reads = " + str(uniq_read), file=RPKM_OUT)
+		print("#Total fragments = " + str(total_tags), file=RPKM_OUT)
+		print("Assign reads to "+ geneFile + '...', end=' ', file=sys.stderr)
 		for line in open(geneFile,'r'):
 			try:
 				if line.startswith('#'):continue
@@ -2822,16 +2830,16 @@ class ParseBAM:
 				geneName      = fields[3]
 				strand    = fields[5].replace(" ","_")
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-				exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+				exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 				intron_starts = exon_ends[:-1]
 				intron_ends=exon_starts[1:]
 				key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 
 					
@@ -2895,7 +2903,7 @@ class ParseBAM:
 					RPKM_OUT.write(chrom.lower() + "\t" + str(tx_start) + "\t" + str(tx_end) + "\t" + geneName + "_mRNA" + "\t" + str(mRNA_count) + "\t" + strand + '\t' +  str(mRNA_count*1000000000.0/(mRNA_len*total_tags)) +'\n')
 				except:
 					RPKM_OUT.write(chrom.lower() + "\t" + str(tx_start) + "\t" + str(tx_end) + "\t" + geneName + "_mRNA" + "\t" + str(0) + "\t" + strand + '\t' +  str(0) +'\n')
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 
 	def readsNVC(self,outfile=None,nx=True):
 		'''for each read, calculate nucleotide frequency vs position'''
@@ -2917,12 +2925,12 @@ class ParseBAM:
 		t_count=[]
 		n_count=[]
 		x_count=[]
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				#if aligned_read.is_unmapped:continue	#skip unmapped read
 				#if aligned_read.is_qcfail:continue	#skip low quality
 				RNA_read = aligned_read.seq.upper()		
@@ -2932,62 +2940,62 @@ class ParseBAM:
 					key = str(i) + j
 					base_freq[key] += 1
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
-		print >>sys.stderr, "generating data matrix ..."
-		print >>FO, "Position\tA\tC\tG\tT\tN\tX"
-		for i in xrange(len(RNA_read)):
-			print  >>FO, str(i) + '\t',
-			print  >>FO, str(base_freq[str(i) + "A"]) + '\t',
+		print("generating data matrix ...", file=sys.stderr)
+		print("Position\tA\tC\tG\tT\tN\tX", file=FO)
+		for i in range(len(RNA_read)):
+			print(str(i) + '\t', end=' ', file=FO)
+			print(str(base_freq[str(i) + "A"]) + '\t', end=' ', file=FO)
 			a_count.append(str(base_freq[str(i) + "A"]))
-			print  >>FO, str(base_freq[str(i) + "C"]) + '\t',
+			print(str(base_freq[str(i) + "C"]) + '\t', end=' ', file=FO)
 			c_count.append(str(base_freq[str(i) + "C"]))
-			print  >>FO, str(base_freq[str(i) + "G"]) + '\t',
+			print(str(base_freq[str(i) + "G"]) + '\t', end=' ', file=FO)
 			g_count.append(str(base_freq[str(i) + "G"]))
-			print  >>FO, str(base_freq[str(i) + "T"]) + '\t',
+			print(str(base_freq[str(i) + "T"]) + '\t', end=' ', file=FO)
 			t_count.append(str(base_freq[str(i) + "T"]))
-			print  >>FO, str(base_freq[str(i) + "N"]) + '\t',
+			print(str(base_freq[str(i) + "N"]) + '\t', end=' ', file=FO)
 			n_count.append(str(base_freq[str(i) + "N"]))
-			print  >>FO, str(base_freq[str(i) + "X"]) + '\t'
+			print(str(base_freq[str(i) + "X"]) + '\t', file=FO)
 			x_count.append(str(base_freq[str(i) + "X"]))
 		FO.close()
 		
 		#generating R scripts
-		print >>sys.stderr, "generating R script  ..."
-		print >>RS, "position=c(" + ','.join([str(i) for i in xrange(len(RNA_read))]) + ')'
-		print >>RS, "A_count=c(" + ','.join(a_count) + ')'
-		print >>RS, "C_count=c(" + ','.join(c_count) + ')'
-		print >>RS, "G_count=c(" + ','.join(g_count) + ')'
-		print >>RS, "T_count=c(" + ','.join(t_count) + ')'
-		print >>RS, "N_count=c(" + ','.join(n_count) + ')'
-		print >>RS, "X_count=c(" + ','.join(x_count) + ')'
+		print("generating R script  ...", file=sys.stderr)
+		print("position=c(" + ','.join([str(i) for i in range(len(RNA_read))]) + ')', file=RS)
+		print("A_count=c(" + ','.join(a_count) + ')', file=RS)
+		print("C_count=c(" + ','.join(c_count) + ')', file=RS)
+		print("G_count=c(" + ','.join(g_count) + ')', file=RS)
+		print("T_count=c(" + ','.join(t_count) + ')', file=RS)
+		print("N_count=c(" + ','.join(n_count) + ')', file=RS)
+		print("X_count=c(" + ','.join(x_count) + ')', file=RS)
 		
 		if nx:
-			print >>RS, "total= A_count + C_count + G_count + T_count + N_count + X_count"
-			print >>RS, "ym=max(A_count/total,C_count/total,G_count/total,T_count/total,N_count/total,X_count/total) + 0.05"
-			print >>RS, "yn=min(A_count/total,C_count/total,G_count/total,T_count/total,N_count/total,X_count/total)"
+			print("total= A_count + C_count + G_count + T_count + N_count + X_count", file=RS)
+			print("ym=max(A_count/total,C_count/total,G_count/total,T_count/total,N_count/total,X_count/total) + 0.05", file=RS)
+			print("yn=min(A_count/total,C_count/total,G_count/total,T_count/total,N_count/total,X_count/total)", file=RS)
 			
-			print >>RS, 'pdf(\"%s\")' % (outfile +".NVC_plot.pdf")
-			print >>RS, 'plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")'
-			print >>RS, 'lines(position,T_count/total,type="o",pch=20,col="red")'
-			print >>RS, 'lines(position,G_count/total,type="o",pch=20,col="blue")'
-			print >>RS, 'lines(position,C_count/total,type="o",pch=20,col="cyan")'
-			print >>RS, 'lines(position,N_count/total,type="o",pch=20,col="black")'		
-			print >>RS, 'lines(position,X_count/total,type="o",pch=20,col="grey")'	
-			print >>RS, 'legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C","N","X"),col=c("dark green","red","blue","cyan","black","grey"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan","black","grey"))'
-			print >>RS, "dev.off()"
+			print('pdf(\"%s\")' % (outfile +".NVC_plot.pdf"), file=RS)
+			print('plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")', file=RS)
+			print('lines(position,T_count/total,type="o",pch=20,col="red")', file=RS)
+			print('lines(position,G_count/total,type="o",pch=20,col="blue")', file=RS)
+			print('lines(position,C_count/total,type="o",pch=20,col="cyan")', file=RS)
+			print('lines(position,N_count/total,type="o",pch=20,col="black")', file=RS)		
+			print('lines(position,X_count/total,type="o",pch=20,col="grey")', file=RS)	
+			print('legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C","N","X"),col=c("dark green","red","blue","cyan","black","grey"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan","black","grey"))', file=RS)
+			print("dev.off()", file=RS)
 		else:
-			print >>RS, "total= A_count + C_count + G_count + T_count"
-			print >>RS, "ym=max(A_count/total,C_count/total,G_count/total,T_count/total) + 0.05"
-			print >>RS, "yn=min(A_count/total,C_count/total,G_count/total,T_count/total)"
+			print("total= A_count + C_count + G_count + T_count", file=RS)
+			print("ym=max(A_count/total,C_count/total,G_count/total,T_count/total) + 0.05", file=RS)
+			print("yn=min(A_count/total,C_count/total,G_count/total,T_count/total)", file=RS)
 		
-			print >>RS, 'pdf(\"%s\")' % (outfile +".NVC_plot.pdf")
-			print >>RS, 'plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")'
-			print >>RS, 'lines(position,T_count/total,type="o",pch=20,col="red")'
-			print >>RS, 'lines(position,G_count/total,type="o",pch=20,col="blue")'
-			print >>RS, 'lines(position,C_count/total,type="o",pch=20,col="cyan")'
-			print >>RS, 'legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C"),col=c("dark green","red","blue","cyan"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan"))'
-			print >>RS, "dev.off()"
+			print('pdf(\"%s\")' % (outfile +".NVC_plot.pdf"), file=RS)
+			print('plot(position,A_count/total,type="o",pch=20,ylim=c(yn,ym),col="dark green",xlab="Position of Read",ylab="Nucleotide Frequency")', file=RS)
+			print('lines(position,T_count/total,type="o",pch=20,col="red")', file=RS)
+			print('lines(position,G_count/total,type="o",pch=20,col="blue")', file=RS)
+			print('lines(position,C_count/total,type="o",pch=20,col="cyan")', file=RS)
+			print('legend('+ str(len(RNA_read)-10) + ',ym,legend=c("A","T","G","C"),col=c("dark green","red","blue","cyan"),lwd=2,pch=20,text.col=c("dark green","red","blue","cyan"))', file=RS)
+			print("dev.off()", file=RS)
 		
 		RS.close()
 		#self.f.seek(0)
@@ -2998,8 +3006,8 @@ class ParseBAM:
 		output = outfile + ".qual.r"
 		FO=open(output,'w')
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		quality = collections.defaultdict(dict)	#read_pos=>quality score=>count
 		q_max = -1
@@ -3008,7 +3016,7 @@ class ParseBAM:
 		i_box={}	#key is read postion,value is 
 		try:
 			while(1):
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				
 				#if aligned_read.is_unmapped:continue	#skip unmapped read
 				#if aligned_read.is_qcfail:continue		#skip low quality
@@ -3027,14 +3035,14 @@ class ParseBAM:
 					except:
 						quality[i][q] = 1
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
 		for p in range(0,read_len):
 			#print str(p) + ':',
 			val=[]
 			occurrence=[]
 			for q in range(q_min,q_max+1):
-				if quality.has_key(p) and quality[p].has_key(q):
+				if p in quality and q in quality[p]:
 					val.append(str(q))				
 					occurrence.append(str(quality[p][q]))	
 					q_list.append(str(quality[p][q]))
@@ -3044,21 +3052,21 @@ class ParseBAM:
 		
 		
 		#generate R script for boxplot
-		print >>FO, "pdf(\'%s\')" % (outfile + ".qual.boxplot.pdf")
+		print("pdf(\'%s\')" % (outfile + ".qual.boxplot.pdf"), file=FO)
 		for i in sorted(i_box):
-			print >>FO,'p'+str(i) + '<-' + i_box[i]
-		print >>FO, 'boxplot(' + ','.join(['p'+str(i) for i in i_box]) + ',xlab=\"Position of Read(5\'->3\')\",ylab=\"Phred Quality Score\",outline=F' + ')'
-		print >>FO,"dev.off()"
+			print('p'+str(i) + '<-' + i_box[i], file=FO)
+		print('boxplot(' + ','.join(['p'+str(i) for i in i_box]) + ',xlab=\"Position of Read(5\'->3\')\",ylab=\"Phred Quality Score\",outline=F' + ')', file=FO)
+		print("dev.off()", file=FO)
 		
 		
 		#generate R script for heatmap
-		print >>FO, '\n'
-		print >>FO, "pdf(\'%s\')" % (outfile + ".qual.heatmap.pdf")
-		print >>FO, "qual=c(" + ','.join(q_list)  + ')'
-		print >>FO, "mat=matrix(qual,ncol=%s,byrow=F)" % (read_len)
-		print >>FO, 'Lab.palette <- colorRampPalette(c("blue", "orange", "red3","red2","red1","red"), space = "rgb",interpolate=c(\'spline\'))'
-		print >>FO, "heatmap(mat,Rowv=NA,Colv=NA,xlab=\"Position of Read\",ylab=\"Phred Quality Score\",labRow=seq(from=%s,to=%s),col = Lab.palette(256),scale=\"none\" )" % (q_min,q_max)
-		print >>FO, 'dev.off()'
+		print('\n', file=FO)
+		print("pdf(\'%s\')" % (outfile + ".qual.heatmap.pdf"), file=FO)
+		print("qual=c(" + ','.join(q_list)  + ')', file=FO)
+		print("mat=matrix(qual,ncol=%s,byrow=F)" % (read_len), file=FO)
+		print('Lab.palette <- colorRampPalette(c("blue", "orange", "red3","red2","red1","red"), space = "rgb",interpolate=c(\'spline\'))', file=FO)
+		print("heatmap(mat,Rowv=NA,Colv=NA,xlab=\"Position of Read\",ylab=\"Phred Quality Score\",labRow=seq(from=%s,to=%s),col = Lab.palette(256),scale=\"none\" )" % (q_min,q_max), file=FO)
+		print('dev.off()', file=FO)
 		
 		
 	def readGC(self,outfile=None):
@@ -3074,12 +3082,12 @@ class ParseBAM:
 		
 		gc_hist=collections.defaultdict(int)	#key is GC percent, value is count of reads
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_unmapped:continue	#skip unmapped read
 				if aligned_read.is_qcfail:continue		#skip low quality
 				RNA_read = aligned_read.seq.upper()		
@@ -3087,19 +3095,19 @@ class ParseBAM:
 				#print gc_percent
 				gc_hist[gc_percent] += 1
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
-		print >>sys.stderr, "writing GC content ..."	
-		print >>FO, "GC%\tread_count"
-		for i in gc_hist.keys():
-			print >>FO, i + '\t' + str(gc_hist[i])
+		print("writing GC content ...", file=sys.stderr)	
+		print("GC%\tread_count", file=FO)
+		for i in list(gc_hist.keys()):
+			print(i + '\t' + str(gc_hist[i]), file=FO)
 			
-		print >>sys.stderr, "writing R script ..."
-		print >>RS, "pdf(\"%s\")" % (outfile +  ".GC_plot.pdf")
-		print >>RS, 'gc=rep(c(' + ','.join([i for i in gc_hist.keys()]) + '),' + 'times=c(' + ','.join([str(i) for i in gc_hist.values()]) + '))'
-		print >>RS, 'hist(gc,probability=T,breaks=%d,xlab="GC content (%%)",ylab="Density of Reads",border="blue",main="")' % 100
+		print("writing R script ...", file=sys.stderr)
+		print("pdf(\"%s\")" % (outfile +  ".GC_plot.pdf"), file=RS)
+		print('gc=rep(c(' + ','.join([i for i in list(gc_hist.keys())]) + '),' + 'times=c(' + ','.join([str(i) for i in list(gc_hist.values())]) + '))', file=RS)
+		print('hist(gc,probability=T,breaks=%d,xlab="GC content (%%)",ylab="Density of Reads",border="blue",main="")' % 100, file=RS)
 		#print >>RS, "lines(density(gc),col='red')"
-		print >>RS ,"dev.off()"		
+		print("dev.off()", file=RS)		
 		#self.f.seek(0)
 
 
@@ -3123,13 +3131,13 @@ class ParseBAM:
 		seqDup_count=collections.defaultdict(int)
 		posDup_count=collections.defaultdict(int)
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
 				exon_boundary=""
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_unmapped:continue	#skip unmapped read
 				if aligned_read.is_qcfail:continue		#skip low quality
 				RNA_read = aligned_read.seq.upper()		
@@ -3145,40 +3153,40 @@ class ParseBAM:
 				posDup[key] +=1
 
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 
-		print >>sys.stderr, "report duplicte rate based on sequence ..."
-		print >>SEQ, "Occurrence\tUniqReadNumber"
-		for i in seqDup.values():			#key is occurence, value is uniq reads number (based on seq)
+		print("report duplicte rate based on sequence ...", file=sys.stderr)
+		print("Occurrence\tUniqReadNumber", file=SEQ)
+		for i in list(seqDup.values()):			#key is occurence, value is uniq reads number (based on seq)
 			seqDup_count[i] +=1
-		for k in sorted(seqDup_count.iterkeys()):	
-			print >>SEQ, str(k) +'\t'+ str(seqDup_count[k])
+		for k in sorted(seqDup_count.keys()):	
+			print(str(k) +'\t'+ str(seqDup_count[k]), file=SEQ)
 		SEQ.close()
 		
-		print >>sys.stderr, "report duplicte rate based on mapping  ..."
-		print >>POS, "Occurrence\tUniqReadNumber"
-		for i in posDup.values():			#key is occurence, value is uniq reads number (based on coord)
+		print("report duplicte rate based on mapping  ...", file=sys.stderr)
+		print("Occurrence\tUniqReadNumber", file=POS)
+		for i in list(posDup.values()):			#key is occurence, value is uniq reads number (based on coord)
 			posDup_count[i] +=1
-		for k in sorted(posDup_count.iterkeys()):	
-			print >>POS, str(k) +'\t'+ str(posDup_count[k])
+		for k in sorted(posDup_count.keys()):	
+			print(str(k) +'\t'+ str(posDup_count[k]), file=POS)
 		POS.close()
 		
 		
-		print >>sys.stderr, "generate R script ..."
-		print >>RS, "pdf(\'%s\')" % (outfile +".DupRate_plot.pdf")
-		print >>RS, "par(mar=c(5,4,4,5),las=0)"
-		print >>RS, "seq_occ=c(" + ','.join([str(i) for i in sorted(seqDup_count.iterkeys()) ]) + ')'
-		print >>RS, "seq_uniqRead=c(" + ','.join([str(seqDup_count[i]) for i in sorted(seqDup_count.iterkeys()) ]) + ')'
-		print >>RS, "pos_occ=c(" + ','.join([str(i) for i in sorted(posDup_count.iterkeys()) ]) + ')'
-		print >>RS, "pos_uniqRead=c(" + ','.join([str(posDup_count[i]) for i in sorted(posDup_count.iterkeys()) ]) + ')'
-		print >>RS, "plot(pos_occ,log10(pos_uniqRead),ylab='Number of Reads (log10)',xlab='Frequency',pch=4,cex=0.8,col='blue',xlim=c(1,%d),yaxt='n')" % up_bound
-		print >>RS, "points(seq_occ,log10(seq_uniqRead),pch=20,cex=0.8,col='red')"
-		print >>RS, 'ym=floor(max(log10(pos_uniqRead)))'
-		print >>RS, "legend(%d,ym,legend=c('Sequence-base','Mapping-base'),col=c('red','blue'),pch=c(4,20))" % max(up_bound-200,1)
-		print >>RS, 'axis(side=2,at=0:ym,labels=0:ym)'
-		print >>RS, 'axis(side=4,at=c(log10(pos_uniqRead[1]),log10(pos_uniqRead[2]),log10(pos_uniqRead[3]),log10(pos_uniqRead[4])), labels=c(round(pos_uniqRead[1]*100/sum(pos_uniqRead)),round(pos_uniqRead[2]*100/sum(pos_uniqRead)),round(pos_uniqRead[3]*100/sum(pos_uniqRead)),round(pos_uniqRead[4]*100/sum(pos_uniqRead))))'
-		print >>RS, 'mtext(4, text = "Reads %", line = 2)'
-		print >>RS, 'dev.off()'
+		print("generate R script ...", file=sys.stderr)
+		print("pdf(\'%s\')" % (outfile +".DupRate_plot.pdf"), file=RS)
+		print("par(mar=c(5,4,4,5),las=0)", file=RS)
+		print("seq_occ=c(" + ','.join([str(i) for i in sorted(seqDup_count.keys()) ]) + ')', file=RS)
+		print("seq_uniqRead=c(" + ','.join([str(seqDup_count[i]) for i in sorted(seqDup_count.keys()) ]) + ')', file=RS)
+		print("pos_occ=c(" + ','.join([str(i) for i in sorted(posDup_count.keys()) ]) + ')', file=RS)
+		print("pos_uniqRead=c(" + ','.join([str(posDup_count[i]) for i in sorted(posDup_count.keys()) ]) + ')', file=RS)
+		print("plot(pos_occ,log10(pos_uniqRead),ylab='Number of Reads (log10)',xlab='Frequency',pch=4,cex=0.8,col='blue',xlim=c(1,%d),yaxt='n')" % up_bound, file=RS)
+		print("points(seq_occ,log10(seq_uniqRead),pch=20,cex=0.8,col='red')", file=RS)
+		print('ym=floor(max(log10(pos_uniqRead)))', file=RS)
+		print("legend(%d,ym,legend=c('Sequence-base','Mapping-base'),col=c('red','blue'),pch=c(4,20))" % max(up_bound-200,1), file=RS)
+		print('axis(side=2,at=0:ym,labels=0:ym)', file=RS)
+		print('axis(side=4,at=c(log10(pos_uniqRead[1]),log10(pos_uniqRead[2]),log10(pos_uniqRead[3]),log10(pos_uniqRead[4])), labels=c(round(pos_uniqRead[1]*100/sum(pos_uniqRead)),round(pos_uniqRead[2]*100/sum(pos_uniqRead)),round(pos_uniqRead[3]*100/sum(pos_uniqRead)),round(pos_uniqRead[4]*100/sum(pos_uniqRead))))', file=RS)
+		print('mtext(4, text = "Reads %", line = 2)', file=RS)
+		print('dev.off()', file=RS)
 		#self.f.seek(0)
 
 	def clipping_profile(self,outfile):
@@ -3188,7 +3196,7 @@ class ParseBAM:
 		
 		OUT=open(out_file1,'w')
 		ROUT=open(out_file2,'w')
-		print >>OUT, "Position\tRead_Total\tRead_clipped"
+		print("Position\tRead_Total\tRead_clipped", file=OUT)
 		soft_p = re.compile(r'(.*?)(\d+)S')
 		read_part = re.compile(r'(\d+)[MIS=X]')
 		total_read =0
@@ -3198,13 +3206,13 @@ class ParseBAM:
 		read_pos=[]
 		clip_count=[]
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
 				exon_boundary=""
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_unmapped:continue	#skip unmapped read
 				if aligned_read.is_qcfail:continue		#skip low quality
 				
@@ -3220,24 +3228,24 @@ class ParseBAM:
 							soft_clip_profile[n]+=1
 						skip_part_of_read += int(j[1])
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 			
 
 		for i in soft_clip_profile:
 			read_pos.append(str(i))
 			clip_count.append(str(soft_clip_profile[i]))
-			print >>OUT, str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i])
-		print >>ROUT, "pdf('clipping_profile.pdf')"
-		print >>ROUT, "read_pos=c(" + ','.join(read_pos) + ')'
-		print >>ROUT, "count=c(" + ','.join(clip_count) + ')'
-		print >>ROUT, 'plot(read_pos,1-(count/%d),col="blue",main="clipping profile",xlab="Position of reads",ylab="Mappability",type="b")' % total_read
-		print >>ROUT, "dev.off()"
+			print(str(i) + '\t' + str(total_read) + '\t' + str(soft_clip_profile[i]), file=OUT)
+		print("pdf('clipping_profile.pdf')", file=ROUT)
+		print("read_pos=c(" + ','.join(read_pos) + ')', file=ROUT)
+		print("count=c(" + ','.join(clip_count) + ')', file=ROUT)
+		print('plot(read_pos,1-(count/%d),col="blue",main="clipping profile",xlab="Position of reads",ylab="Mappability",type="b")' % total_read, file=ROUT)
+		print("dev.off()", file=ROUT)
 
 	def coverageGeneBody(self,refbed,outfile):
 		'''Calculate reads coverage over gene body, from 5'to 3'. each gene will be equally divided
 		into 100 regsions'''
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		OUT1 = open(outfile + ".geneBodyCoverage_plot.r",'w')
 		OUT2 = open(outfile + ".geneBodyCoverage.txt",'w')
@@ -3248,12 +3256,12 @@ class ParseBAM:
 		rpkm={}
 		
 		#read SAM 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -3272,9 +3280,9 @@ class ParseBAM:
 					else:
 						ranges[chrom].add_interval( Interval( exon[1], exon[2] ) )
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 
-		print >>sys.stderr, "calculating coverage over gene body ..."
+		print("calculating coverage over gene body ...", file=sys.stderr)
 		coverage=collections.defaultdict(int)
 		flag=0
 		for line in open(refbed,'r'):
@@ -3288,19 +3296,19 @@ class ParseBAM:
 				geneName      = fields[3]
 				strand    = fields[5]
 				
-				exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-				exon_starts = map((lambda x: x + tx_start ), exon_starts)
-				exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-				exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+				exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+				exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+				exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+				exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			except:
-				print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line,
+				print("[NOTE:input bed must be 12-column] skipped this line: " + line, end=' ', file=sys.stderr)
 				continue
 			gene_all_base=[]
 			percentile_base=[]
 			mRNA_len =0
 			flag=0
 			for st,end in zip(exon_starts,exon_ends):
-				gene_all_base.extend(range(st+1,end+1))		#0-based coordinates on genome
+				gene_all_base.extend(list(range(st+1,end+1)))		#0-based coordinates on genome
 				mRNA_len = len(gene_all_base)
 				if mRNA_len <100:
 					flag=1
@@ -3317,18 +3325,18 @@ class ParseBAM:
 					coverage[i] += len(ranges[chrom].find(percentile_base[i], percentile_base[i]+1))
 		x_coord=[]
 		y_coord=[]
-		print >>OUT2, "Total reads: " + str(totalReads)
-		print >>OUT2, "Fragment number: " + str(fragment_num)
-		print >>OUT2, "percentile\tcount"
+		print("Total reads: " + str(totalReads), file=OUT2)
+		print("Fragment number: " + str(fragment_num), file=OUT2)
+		print("percentile\tcount", file=OUT2)
 		for i in coverage:
 			x_coord.append(str(i))
 			y_coord.append(str(coverage[i]))
-			print >>OUT2, str(i) + '\t' + str(coverage[i])
-		print >>OUT1, "pdf(\'%s\')" % (outfile + ".geneBodyCoverage.pdf")
-		print >>OUT1, "x=0:100"
-		print >>OUT1, "y=c(" + ','.join(y_coord) + ')'
-		print >>OUT1, "plot(x,y,xlab=\"percentile of gene body (5'->3')\",ylab='read number',type='s')"
-		print >>OUT1, "dev.off()"
+			print(str(i) + '\t' + str(coverage[i]), file=OUT2)
+		print("pdf(\'%s\')" % (outfile + ".geneBodyCoverage.pdf"), file=OUT1)
+		print("x=0:100", file=OUT1)
+		print("y=c(" + ','.join(y_coord) + ')', file=OUT1)
+		print("plot(x,y,xlab=\"percentile of gene body (5'->3')\",ylab='read number',type='s')", file=OUT1)
+		print("dev.off()", file=OUT1)
 					
 	def mRNA_inner_distance(self,outfile,refbed,low_bound=0,up_bound=1000,step=10):
 		'''estimate the inner distance of mRNA pair end fragment. fragment size = insert_size + 2 x read_length'''
@@ -3345,7 +3353,7 @@ class ParseBAM:
 		ranges={}
 		ranges[fchrom]=Intersecter()
 		
-		window_left_bound = range(low_bound,up_bound,step)
+		window_left_bound = list(range(low_bound,up_bound,step))
  		frag_size=0
 		
 		inner_distance_bitsets=BinnedBitSet()
@@ -3356,7 +3364,7 @@ class ParseBAM:
  		counts=[]
  		count=0
  		
- 		print >>sys.stderr, "Get intron regions from " + refbed + " ..."
+ 		print("Get intron regions from " + refbed + " ...", file=sys.stderr)
  		bed_obj = BED.ParseBED(refbed)
  		ref_exons = []
  		
@@ -3364,14 +3372,14 @@ class ParseBAM:
  			ref_exons.append([exn[0].upper(), exn[1], exn[2]])
 		exon_bitsets = binned_bitsets_from_list(ref_exons)		
 		
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
 				splice_intron_size=0
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -3433,28 +3441,28 @@ class ParseBAM:
 					ranges[fchrom].add_interval( Interval( inner_distance-1, inner_distance ) )
 					
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
 		
 		if pair_num==0:
-			print >>sys.stderr, "Cannot find paired reads"
+			print("Cannot find paired reads", file=sys.stderr)
 			sys.exit(0)
 		#print >>FQ, "Total paired read " + str(pair_num)
 		for st in window_left_bound:
-			sizes.append(str(st + step/2))
+			sizes.append(str(st + old_div(step,2)))
 			count = str(len(ranges[fchrom].find(st,st + step)))
 			counts.append(count)
-			print >>FQ, str(st) + '\t' + str(st+step) +'\t' + count		
+			print(str(st) + '\t' + str(st+step) +'\t' + count, file=FQ)		
 		
-		print >>RS, "pdf(\'%s\')" % (outfile + ".inner_distance_plot.pdf")
+		print("pdf(\'%s\')" % (outfile + ".inner_distance_plot.pdf"), file=RS)
 		#print >>RS, "par(mfrow=c(2,1),cex.main=0.8,cex.lab=0.8,cex.axis=0.8,mar=c(4,4,4,1))"
 		#print >>RS, 'pie(c(%d,%d,%d),col=rainbow(3),cex=0.5,radius=1,main="Total %d fragments",labels=c("fraSize <= %d\\n(%4.2f%%)","fragSize > %d\\n(%4.2f%%)","%d < fragSize <= %d\\n(%4.2f%%)"), density=rep(80,80,80),angle=c(90,140,170))' % (ultra_low, ultra_high, pair_num -ultra_low -ultra_high, pair_num, low_bound, ultra_low*100/pair_num, up_bound, ultra_high*100/pair_num, low_bound, up_bound, 100-ultra_low*100/pair_num - ultra_high*100/pair_num)
-		print >>RS, 'fragsize=rep(c(' + ','.join(sizes) + '),' + 'times=c(' + ','.join(counts) + '))'
-		print >>RS, 'frag_sd = round(sd(fragsize))'
-		print >>RS, 'frag_mean = round(mean(fragsize))'
-		print >>RS, 'hist(fragsize,probability=T,breaks=%d,xlab="mRNA insert size (bp)",main=paste(c("Mean=",frag_mean,";","SD=",frag_sd),collapse=""),border="blue")' % len(window_left_bound)
-		print >>RS, "lines(density(fragsize,bw=%d),col='red')" % (2*step)
-		print >>RS ,"dev.off()"
+		print('fragsize=rep(c(' + ','.join(sizes) + '),' + 'times=c(' + ','.join(counts) + '))', file=RS)
+		print('frag_sd = round(sd(fragsize))', file=RS)
+		print('frag_mean = round(mean(fragsize))', file=RS)
+		print('hist(fragsize,probability=T,breaks=%d,xlab="mRNA insert size (bp)",main=paste(c("Mean=",frag_mean,";","SD=",frag_sd),collapse=""),border="blue")' % len(window_left_bound), file=RS)
+		print("lines(density(fragsize,bw=%d),col='red')" % (2*step), file=RS)
+		print("dev.off()", file=RS)
 		FO.close()
 		FQ.close()
 		RS.close()
@@ -3468,7 +3476,7 @@ class ParseBAM:
 		out_file = outfile + ".junction.xls"
 		out_file2 = outfile + ".junction_plot.r"
 		if refgene is None:
-			print >>sys.stderr, "You must provide reference gene model in bed format."
+			print("You must provide reference gene model in bed format.", file=sys.stderr)
 			sys.exit(1)
 		OUT = open(out_file,'w')
 		ROUT = open(out_file2,'w')
@@ -3482,13 +3490,13 @@ class ParseBAM:
 		known_junc =0
 		splicing_events=collections.defaultdict(int)	
 		
-		print >>sys.stderr, "Reading reference bed file: ",refgene, " ... ",
+		print("Reading reference bed file: ",refgene, " ... ", end=' ', file=sys.stderr)
 		for line in open(refgene,'r'):
 			if line.startswith(('#','track','browser')):continue  
            	# Parse fields from gene tabls
 			fields = line.split()
 			if(len(fields)<12):
-				print >>sys.stderr, "Invalid bed line (skipped):",line,
+				print("Invalid bed line (skipped):",line, end=' ', file=sys.stderr)
 				continue
 			chrom     = fields[0].upper()
 			tx_start = int( fields[1] )
@@ -3496,25 +3504,25 @@ class ParseBAM:
 			if int(fields[9] ==1):
 				continue    	
 			
-			exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-			exon_starts = map((lambda x: x + tx_start ), exon_starts)
-			exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-			exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+			exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+			exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+			exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+			exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			intron_start = exon_ends[:-1]
 			intron_end=exon_starts[1:]
 			for i_st,i_end in zip (intron_start, intron_end):
 				refIntronStarts[chrom][i_st] =i_st
 				refIntronEnds[chrom][i_end] =i_end			
-		print >>sys.stderr,"Done"
+		print("Done", file=sys.stderr)
 		
 		#reading input SAM file
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 
 		try:
 			while(1):
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -3537,28 +3545,28 @@ class ParseBAM:
 					total_junc +=1
 					if intrn[2] - intrn[1] < min_intron:continue
 					splicing_events[intrn[0] + ":" + str(intrn[1]) + ":" + str(intrn[2])] += 1
-					if (refIntronStarts[chrom].has_key(intrn[1]) and refIntronEnds[chrom].has_key(intrn[2])):
+					if (intrn[1] in refIntronStarts[chrom] and intrn[2] in refIntronEnds[chrom]):
 						known_junc +=1																		#known both
-					elif (not refIntronStarts[chrom].has_key(intrn[1]) and not refIntronEnds[chrom].has_key(intrn[2])):
+					elif (intrn[1] not in refIntronStarts[chrom] and intrn[2] not in refIntronEnds[chrom]):
 						novel35_junc +=1																
 					else:
 						novel3or5_junc +=1
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
-		print "total = " + str(total_junc)
+		print("total = " + str(total_junc))
 		#self.f.seek(0)
 		
-		print >>ROUT, 'pdf(\"%s\")' % (outfile + ".junction_plot.pdf")
-		print >>ROUT, "events=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc)])+ ')'
-		print >>ROUT, 'pie(events,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing events",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc))
-		print >>ROUT, "dev.off()"
+		print('pdf(\"%s\")' % (outfile + ".junction_plot.pdf"), file=ROUT)
+		print("events=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc)])+ ')', file=ROUT)
+		print('pie(events,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing events",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc)), file=ROUT)
+		print("dev.off()", file=ROUT)
 		
-		print >>sys.stderr, "\n==================================================================="
-		print >>sys.stderr, "Total splicing  Events:\t" + str(total_junc)
-		print >>sys.stderr, "Known Splicing Events:\t" + str(known_junc)
-		print >>sys.stderr, "Partial Novel Splicing Events:\t" + str(novel3or5_junc)
-		print >>sys.stderr, "Novel Splicing Events:\t" + str(novel35_junc)
+		print("\n===================================================================", file=sys.stderr)
+		print("Total splicing  Events:\t" + str(total_junc), file=sys.stderr)
+		print("Known Splicing Events:\t" + str(known_junc), file=sys.stderr)
+		print("Partial Novel Splicing Events:\t" + str(novel3or5_junc), file=sys.stderr)
+		print("Novel Splicing Events:\t" + str(novel35_junc), file=sys.stderr)
 		
 		#reset variables
 		total_junc =0
@@ -3566,36 +3574,36 @@ class ParseBAM:
 		novel3or5_junc =0
 		known_junc =0
 		
-		print >>OUT, "chrom\tintron_st(0-based)\tintron_end(1-based)\tread_count\tannotation"
+		print("chrom\tintron_st(0-based)\tintron_end(1-based)\tread_count\tannotation", file=OUT)
 		for i in splicing_events:
 			total_junc += 1
 			(chrom, i_st, i_end) = i.split(":")
-			print >>OUT, '\t'.join([chrom.replace("CHR","chr"),i_st,i_end]) + '\t' + str(splicing_events[i]) + '\t',
+			print('\t'.join([chrom.replace("CHR","chr"),i_st,i_end]) + '\t' + str(splicing_events[i]) + '\t', end=' ', file=OUT)
 			i_st = int(i_st)
 			i_end = int(i_end)
-			if (refIntronStarts[chrom].has_key(i_st) and refIntronEnds[chrom].has_key(i_end)):
-				print >>OUT, "annotated"
+			if (i_st in refIntronStarts[chrom] and i_end in refIntronEnds[chrom]):
+				print("annotated", file=OUT)
 				known_junc +=1
-			elif (not refIntronStarts[chrom].has_key(i_st) and not refIntronEnds[chrom].has_key(i_end)):
-				print >>OUT, 'complete_novel'
+			elif (i_st not in refIntronStarts[chrom] and i_end not in refIntronEnds[chrom]):
+				print('complete_novel', file=OUT)
 				novel35_junc +=1
 			else:
-				print >>OUT, 'partial_novel'
+				print('partial_novel', file=OUT)
 				novel3or5_junc +=1
 		
 		if total_junc ==0:
-			print >>sys.stderr, "No splice read found"
+			print("No splice read found", file=sys.stderr)
 			sys.exit(1)
-		print >>sys.stderr, "\nTotal splicing  Junctions:\t" + str(total_junc)
-		print >>sys.stderr, "Known Splicing Junctions:\t" + str(known_junc)
-		print >>sys.stderr, "Partial Novel Splicing Junctions:\t" + str(novel3or5_junc)
-		print >>sys.stderr, "Novel Splicing Junctions:\t" + str(novel35_junc)
-		print >>sys.stderr, "\n==================================================================="
+		print("\nTotal splicing  Junctions:\t" + str(total_junc), file=sys.stderr)
+		print("Known Splicing Junctions:\t" + str(known_junc), file=sys.stderr)
+		print("Partial Novel Splicing Junctions:\t" + str(novel3or5_junc), file=sys.stderr)
+		print("Novel Splicing Junctions:\t" + str(novel35_junc), file=sys.stderr)
+		print("\n===================================================================", file=sys.stderr)
 		
-		print >>ROUT, 'pdf("splicing_junction_pie.pdf")'
-		print >>ROUT, "junction=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc,)])+ ')'
-		print >>ROUT, 'pie(junction,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing junctions",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc))
-		print >>ROUT, "dev.off()"
+		print('pdf("splicing_junction_pie.pdf")', file=ROUT)
+		print("junction=c(" + ','.join([str(i*100.0/total_junc) for i in (novel3or5_junc,novel35_junc,known_junc,)])+ ')', file=ROUT)
+		print('pie(junction,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing junctions",labels=c("partial_novel %d%%","complete_novel %d%%","known %d%%"))' % (round(novel3or5_junc*100.0/total_junc),round(novel35_junc*100.0/total_junc),round(known_junc*100.0/total_junc)), file=ROUT)
+		print("dev.off()", file=ROUT)
 		#print >>ROUT, "mat=matrix(c(events,junction),byrow=T,ncol=3)"
 		#print >>ROUT, 'barplot(mat,beside=T,ylim=c(0,100),names=c("known","partial\nnovel","complete\nnovel"),legend.text=c("splicing events","splicing junction"),ylab="Percent")'
 
@@ -3604,7 +3612,7 @@ class ParseBAM:
 		
 		out_file = outfile + ".junctionSaturation_plot.r"
 		if refgene is None:
-			print >>sys.stderr, "You must provide reference gene model in bed format."
+			print("You must provide reference gene model in bed format.", file=sys.stderr)
 			sys.exit(1)
 		
 		OUT = open(out_file,'w')
@@ -3612,12 +3620,12 @@ class ParseBAM:
 
 		#reading reference gene 
 		knownSpliceSites= set()
-		print >>sys.stderr, "reading reference bed file: ",refgene, " ... ",
+		print("reading reference bed file: ",refgene, " ... ", end=' ', file=sys.stderr)
 		for line in open(refgene,'r'):
 			if line.startswith(('#','track','browser')):continue  
 			fields = line.split()
 			if(len(fields)<12):
-				print >>sys.stderr, "Invalid bed line (skipped):",line,
+				print("Invalid bed line (skipped):",line, end=' ', file=sys.stderr)
 				continue
 			chrom     = fields[0].upper()
 			tx_start = int( fields[1] )
@@ -3625,15 +3633,15 @@ class ParseBAM:
 			if int(fields[9] ==1):
 				continue    	
 			
-			exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-			exon_starts = map((lambda x: x + tx_start ), exon_starts)
-			exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-			exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends);   
+			exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+			exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+			exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+			exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
 			intron_start = exon_ends[:-1]
 			intron_end=exon_starts[1:]
 			for st,end in zip (intron_start, intron_end):
 				knownSpliceSites.add(chrom + ":" + str(st) + "-" + str(end))
-		print >>sys.stderr,"Done! Total "+str(len(knownSpliceSites)) + " known splicing junctions."
+		print("Done! Total "+str(len(knownSpliceSites)) + " known splicing junctions.", file=sys.stderr)
 
 
 		#read SAM file
@@ -3642,12 +3650,12 @@ class ParseBAM:
 		intron_end=[]
 		uniqSpliceSites=collections.defaultdict(int)
 
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 		try:
 			while(1):
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -3670,11 +3678,11 @@ class ParseBAM:
 					if intrn[2] - intrn[1] < min_intron:continue
 					samSpliceSites.append(intrn[0] + ":" + str(intrn[1]) + "-" + str(intrn[2]))
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
-		print >>sys.stderr, "shuffling alignments ...",
+		print("shuffling alignments ...", end=' ', file=sys.stderr)
 		random.shuffle(samSpliceSites)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 				
 		#resampling
 		SR_num = len(samSpliceSites)
@@ -3684,30 +3692,30 @@ class ParseBAM:
 		all_junc=[]
 		unknown_junc=[]
 		#=========================sampling uniquely mapped reads from population
-		tmp=range(sample_start,sample_end,sample_step)
+		tmp=list(range(sample_start,sample_end,sample_step))
 		tmp.append(100)
 		for pertl in tmp:	#[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95,100]
 			knownSpliceSites_num = 0
-			index_st = int(SR_num * ((pertl - sample_step)/100.0))
-			index_end = int(SR_num * (pertl/100.0))
+			index_st = int(SR_num * (old_div((pertl - sample_step),100.0)))
+			index_end = int(SR_num * (old_div(pertl,100.0)))
 			if index_st < 0: index_st = 0
 			sample_size += index_end -index_st
 			
-			print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(sample_size) + ") splicing reads.",
+			print("sampling " + str(pertl) +"% (" + str(sample_size) + ") splicing reads.", end=' ', file=sys.stderr)
 			
 			#all splice juntion
 			for i in range(index_st, index_end):
 				uniqSpliceSites[samSpliceSites[i]] +=1	
-			all_junctionNum = len(uniqSpliceSites.keys())
+			all_junctionNum = len(list(uniqSpliceSites.keys()))
 			all_junc.append(str(all_junctionNum))
-			print >>sys.stderr, str(all_junctionNum) + " splicing junctions.",
+			print(str(all_junctionNum) + " splicing junctions.", end=' ', file=sys.stderr)
 			
 			#known splice junction
 			known_junctionNum = 0
 			for sj in uniqSpliceSites:
 				if sj in knownSpliceSites and uniqSpliceSites[sj] >= recur:
 					known_junctionNum +=1
-			print >>sys.stderr, str(known_junctionNum) + " known splicing junctions.",
+			print(str(known_junctionNum) + " known splicing junctions.", end=' ', file=sys.stderr)
 			known_junc.append(str(known_junctionNum))
 			
 			#unknown splice junction
@@ -3716,28 +3724,28 @@ class ParseBAM:
 				if sj not in knownSpliceSites:
 					unknown_junctionNum +=1
 			unknown_junc.append(str(unknown_junctionNum))
-			print >>sys.stderr, str(unknown_junctionNum) + " novel splicing junctions."
+			print(str(unknown_junctionNum) + " novel splicing junctions.", file=sys.stderr)
 			
 		#for j in uniq_SJ:
 			#print >>OUT, j + "\t" + str(uniq_SJ[j])
-		print >>OUT, "pdf(\'%s\')" % (outfile + '.junctionSaturation_plot.pdf')
-		print >>OUT, "x=c(" + ','.join([str(i) for i in tmp]) + ')'
-		print >>OUT, "y=c(" + ','.join(known_junc) + ')'
-		print >>OUT, "z=c(" + ','.join(all_junc) + ')'
-		print >>OUT, "w=c(" + ','.join(unknown_junc) + ')'
-		print >>OUT, "m=max(%d,%d,%d)" % (int(int(known_junc[-1])/1000), int(int(all_junc[-1])/1000),int(int(unknown_junc[-1])/1000))
-		print >>OUT, "n=min(%d,%d,%d)" % (int(int(known_junc[0])/1000), int(int(all_junc[0])/1000),int(int(unknown_junc[0])/1000))
-		print >>OUT, "plot(x,z/1000,xlab='percent of total reads',ylab='Number of splicing junctions (x1000)',type='o',col='blue',ylim=c(n,m))"
-		print >>OUT, "points(x,y/1000,type='o',col='red')"
-		print >>OUT, "points(x,w/1000,type='o',col='green')"
-		print >>OUT, 'legend(5,%d, legend=c("All junctions","known junctions", "novel junctions"),col=c("blue","red","green"),lwd=1,pch=1)' % int(int(all_junc[-1])/1000)
-		print >>OUT, "dev.off()"
+		print("pdf(\'%s\')" % (outfile + '.junctionSaturation_plot.pdf'), file=OUT)
+		print("x=c(" + ','.join([str(i) for i in tmp]) + ')', file=OUT)
+		print("y=c(" + ','.join(known_junc) + ')', file=OUT)
+		print("z=c(" + ','.join(all_junc) + ')', file=OUT)
+		print("w=c(" + ','.join(unknown_junc) + ')', file=OUT)
+		print("m=max(%d,%d,%d)" % (int(old_div(int(known_junc[-1]),1000)), int(old_div(int(all_junc[-1]),1000)),int(old_div(int(unknown_junc[-1]),1000))), file=OUT)
+		print("n=min(%d,%d,%d)" % (int(old_div(int(known_junc[0]),1000)), int(old_div(int(all_junc[0]),1000)),int(old_div(int(unknown_junc[0]),1000))), file=OUT)
+		print("plot(x,z/1000,xlab='percent of total reads',ylab='Number of splicing junctions (x1000)',type='o',col='blue',ylim=c(n,m))", file=OUT)
+		print("points(x,y/1000,type='o',col='red')", file=OUT)
+		print("points(x,w/1000,type='o',col='green')", file=OUT)
+		print('legend(5,%d, legend=c("All junctions","known junctions", "novel junctions"),col=c("blue","red","green"),lwd=1,pch=1)' % int(old_div(int(all_junc[-1]),1000)), file=OUT)
+		print("dev.off()", file=OUT)
 
 	def saturation_RPKM(self,refbed,outfile,sample_start=5,sample_step=5,sample_end=100,skip_multi=True, strand_rule=None):
 		'''for each gene, check if its RPKM (epxresion level) has already been saturated or not'''
 		
 		if refbed is None:
-			print >>sys.stderr,"You must specify a bed file representing gene model\n"
+			print("You must specify a bed file representing gene model\n", file=sys.stderr)
 			exit(0)
 		rpkm_file = outfile + ".eRPKM.xls"
 		raw_file = outfile + ".rawCount.xls"
@@ -3762,17 +3770,17 @@ class ParseBAM:
 		elif len(strand_rule.split(',')) ==2:									#singeEnd, strand-specific
 			for i in strand_rule.split(','):strandRule[i[0]]=i[1]
 		else:
-			print >>sys.stderr, "Unknown value of: 'strand_rule' " +  strand_rule
+			print("Unknown value of: 'strand_rule' " +  strand_rule, file=sys.stderr)
 			sys.exit(1)	
 
 
 		#read SAM or BAM
-		if self.bam_format:print >>sys.stderr, "Load BAM file ... ",
-		else:print >>sys.stderr, "Load SAM file ... ",
+		if self.bam_format:print("Load BAM file ... ", end=' ', file=sys.stderr)
+		else:print("Load SAM file ... ", end=' ', file=sys.stderr)
 		try:
 			while(1):
 				flag=0
-				aligned_read = self.samfile.next()
+				aligned_read = next(self.samfile)
 				if aligned_read.is_qcfail:continue			#skip low quanlity					
 				if aligned_read.is_duplicate:continue		#skip duplicate read
 				if aligned_read.is_secondary:continue		#skip non primary hit
@@ -3808,21 +3816,21 @@ class ParseBAM:
 					if strandRule[strand_key] == '+': cUR_plus += len(exon_blocks)
 					if strandRule[strand_key] == '-': cUR_minus += len(exon_blocks)
 					for exn in exon_blocks:
-						if strandRule[strand_key] == '+': block_list_plus.append(exn[0] + ":" + str(exn[1] + (exn[2]-exn[1])/2 ))
-						if strandRule[strand_key] == '-': block_list_minus.append(exn[0] + ":" + str(exn[1] + (exn[2]-exn[1])/2 ))
+						if strandRule[strand_key] == '+': block_list_plus.append(exn[0] + ":" + str(exn[1] + old_div((exn[2]-exn[1]),2) ))
+						if strandRule[strand_key] == '-': block_list_minus.append(exn[0] + ":" + str(exn[1] + old_div((exn[2]-exn[1]),2) ))
 				#Not strand specific
 				else:			
 					for exn in exon_blocks:
-						block_list.append(exn[0] + ":" + str(exn[1] + (exn[2]-exn[1])/2 ))
+						block_list.append(exn[0] + ":" + str(exn[1] + old_div((exn[2]-exn[1]),2) ))
 		except StopIteration:
-			print >>sys.stderr, "Done"
+			print("Done", file=sys.stderr)
 		
 		
-		print >>sys.stderr, "shuffling alignments ...",
+		print("shuffling alignments ...", end=' ', file=sys.stderr)
 		random.shuffle(block_list_plus)
 		random.shuffle(block_list_minus)
 		random.shuffle(block_list)
-		print >>sys.stderr, "Done"
+		print("Done", file=sys.stderr)
 		
 		
 		ranges_plus={}
@@ -3833,38 +3841,38 @@ class ParseBAM:
 		rawCount_table=collections.defaultdict(list)
 		RPKM_head=['#chr','start','end','name','score','strand']
 
-		tmp=range(sample_start,sample_end,sample_step)
+		tmp=list(range(sample_start,sample_end,sample_step))
 		tmp.append(100)
 		#=========================sampling uniquely mapped reads from population
 		for pertl in tmp:	#[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95,100]
-			percent_st = (pertl-sample_step)/100.0
-			percent_end = pertl/100.0
+			percent_st = old_div((pertl-sample_step),100.0)
+			percent_end = old_div(pertl,100.0)
 			if percent_st < 0: percent_st = 0
 			sample_size = cUR_num * percent_end
 			RPKM_head.append(str(pertl) + '%')
 			
 			if strand_rule is not None:
-				print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(int(cUR_plus * percent_end)) + ") forward strand fragments ..."
+				print("sampling " + str(pertl) +"% (" + str(int(cUR_plus * percent_end)) + ") forward strand fragments ...", file=sys.stderr)
 				for i in block_list_plus[int(cUR_plus*percent_st):int(cUR_plus*percent_end)]:
 					(chr,coord) = i.split(':')
 					if chr not in ranges_plus:ranges_plus[chr] = Intersecter()
 					else:ranges_plus[chr].add_interval( Interval( int(coord), int(coord)+1 ) )								
 				
-				print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(int(cUR_minus * percent_end)) + ") reverse strand fragments ..."			
+				print("sampling " + str(pertl) +"% (" + str(int(cUR_minus * percent_end)) + ") reverse strand fragments ...", file=sys.stderr)			
 				for i in block_list_minus[int(cUR_minus*percent_st):int(cUR_minus*percent_end)]:
 					(chr,coord) = i.split(':')
 					if chr not in ranges_minus:ranges_minus[chr] = Intersecter()				
 					else:ranges_minus[chr].add_interval( Interval( int(coord), int(coord)+1 ) )						
 			
 			else:
-				print >>sys.stderr, "sampling " + str(pertl) +"% (" + str(int(sample_size)) + ") fragments ..."
+				print("sampling " + str(pertl) +"% (" + str(int(sample_size)) + ") fragments ...", file=sys.stderr)
 				for i in block_list[int(cUR_num*percent_st):int(cUR_num*percent_end)]:
 					(chr,coord) = i.split(':')
 					if chr not in ranges:ranges[chr] = Intersecter()						
 					else:ranges[chr].add_interval( Interval( int(coord), int(coord)+1 ) )														
 
 			#========================= calculating RPKM based on sub-population
-			print >>sys.stderr, "assign reads to transcripts in " + refbed + ' ...'
+			print("assign reads to transcripts in " + refbed + ' ...', file=sys.stderr)
 			for line in open(refbed,'r'):
 				try:
 					if line.startswith(('#','track','browser')):continue  
@@ -3875,14 +3883,14 @@ class ParseBAM:
 					tx_end    = int( fields[2] )
 					geneName      = fields[3]
 					strand    = fields[5]
-					exon_starts = map( int, fields[11].rstrip( ',\n' ).split( ',' ) )
-					exon_starts = map((lambda x: x + tx_start ), exon_starts)
-					exon_ends = map( int, fields[10].rstrip( ',\n' ).split( ',' ) )
-					exon_ends = map((lambda x, y: x + y ), exon_starts, exon_ends)
-					exon_sizes = map(int,fields[10].rstrip(',\n').split(','))
+					exon_starts = list(map( int, fields[11].rstrip( ',\n' ).split( ',' ) ))
+					exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
+					exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
+					exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends))
+					exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
 					key='\t'.join((chrom.lower(),str(tx_start),str(tx_end),geneName,'0',strand))
 				except:
-					print >>sys.stderr,"[NOTE:input bed must be 12-column] skipped this line: " + line
+					print("[NOTE:input bed must be 12-column] skipped this line: " + line, file=sys.stderr)
 					continue
 				mRNA_count=0	#we need to initializ it to 0 for each gene
 				mRNA_len=sum(exon_sizes)
@@ -3895,24 +3903,24 @@ class ParseBAM:
 						if chrom in ranges:
 							mRNA_count += len(ranges[chrom].find(st,end))
 				if mRNA_len ==0:
-					print >>sys.stderr, geneName + " has 0 nucleotides. Exit!"
+					print(geneName + " has 0 nucleotides. Exit!", file=sys.stderr)
 					sys.exit(1)
 				if sample_size == 0:
-					print >>sys.stderr, "Too few reads to sample. Exit!"
+					print("Too few reads to sample. Exit!", file=sys.stderr)
 					sys.exit(1)
-				mRNA_RPKM = (mRNA_count * 1000000000.0)/(mRNA_len * sample_size)
+				mRNA_RPKM = old_div((mRNA_count * 1000000000.0),(mRNA_len * sample_size))
 				RPKM_table[key].append(str(mRNA_RPKM))
 				rawCount_table[key].append(str(mRNA_count))
-			print >>sys.stderr, ""
+			print("", file=sys.stderr)
 
 		#self.f.seek(0)
-		print >>RPKM_OUT, '\t'.join(RPKM_head)
-		print >>RAW_OUT, '\t'.join(RPKM_head)
+		print('\t'.join(RPKM_head), file=RPKM_OUT)
+		print('\t'.join(RPKM_head), file=RAW_OUT)
 		for key in RPKM_table:
-			print >>RPKM_OUT, key + '\t',
-			print >>RPKM_OUT, '\t'.join(RPKM_table[key])
-			print >>RAW_OUT, key + '\t',
-			print >>RAW_OUT, '\t'.join(rawCount_table[key])		
+			print(key + '\t', end=' ', file=RPKM_OUT)
+			print('\t'.join(RPKM_table[key]), file=RPKM_OUT)
+			print(key + '\t', end=' ', file=RAW_OUT)
+			print('\t'.join(rawCount_table[key]), file=RAW_OUT)		
 		
 	def fetchAlignments(self,chr,st,end):
 		'''fetch alignment from sorted BAM file based on chr, st, end
@@ -3930,4 +3938,4 @@ def print_bits_as_bed( bits ):
 		start = bits.next_set( end )
 		if start == bits.size: break
 		end = bits.next_clear( start )
-		print "%d\t%d" % ( start, end )
+		print("%d\t%d" % ( start, end ))

@@ -5,6 +5,10 @@ Author  Ernesto P. Adorio, PhD.
 		UPDEPP (U.P. at Clarkfield)
 Version 0.0.1 August 7. 2009
 """
+from __future__ import division
+from __future__ import print_function
+from builtins import range
+from past.utils import old_div
 from math import modf, floor
 def quantile(x, q,  qtype = 7, issorted = False):
 	"""
@@ -36,8 +40,8 @@ def quantile(x, q,  qtype = 7, issorted = False):
 			(0.5, 0, 0, 1), # hydrologists method, R type 5
 			(0,   1, 0, 1), # mean-based estimate(Weibull method), (SPSS,Minitab), type 6
 			(1,  -1, 0, 1), # mode-based method,(S, S-Plus), R type 7
-			(1.0/3, 1.0/3, 0, 1), # median-unbiased ,  R type 8
-			(3/8.0, 0.25, 0, 1)   # normal-unbiased, R type 9.
+			(old_div(1.0,3), old_div(1.0,3), 0, 1), # median-unbiased ,  R type 8
+			(old_div(3,8.0), 0.25, 0, 1)   # normal-unbiased, R type 9.
 		   ]
 	a, b, c, d = abcd[qtype-1]
 	n = len(x)
@@ -54,6 +58,6 @@ def quantile(x, q,  qtype = 7, issorted = False):
 def Test():
 	x = [11.4, 17.3, 21.3, 25.9, 40.1, 50.5, 60.0, 70.0, 75]
 	for qtype in range(1,10):
-		print qtype, quantile(x, 0.35, qtype)
+		print(qtype, quantile(x, 0.35, qtype))
 if __name__ == "__main__":
 	Test()

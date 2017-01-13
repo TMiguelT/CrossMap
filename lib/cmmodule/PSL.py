@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 '''manipulate blat PSL file.'''
+from __future__ import print_function
 
 #import built-in modules
+from builtins import str
+from builtins import range
+from builtins import object
 import os,sys
 import re
 import string
@@ -25,7 +29,7 @@ __email__ = "liguow@bcm.edu"
 __status__ = "Development" #Prototype or Production
 
 
-class PSL:
+class PSL(object):
     '''manipulate PSL format file (blat output file)'''
     
     def __init__(self,inputfile_name,score=20,block=2):
@@ -64,9 +68,9 @@ class PSL:
                 nonPslLine = nonPslLine+1
             if not self.__line:break    #end of file
             
-        print  "\nTotal: ", totalLine, "lines"
-        print  "Used: ", usedLine, "lines"
-        print  "Non-PSL: ", nonPslLine,"lines","\n"
+        print("\nTotal: ", totalLine, "lines")
+        print("Used: ", usedLine, "lines")
+        print("Non-PSL: ", nonPslLine,"lines","\n")
           
     def head(self,limit=10):
         '''print out header lines of PSL file, default first 10 lines
@@ -76,7 +80,7 @@ class PSL:
         field=[]
         for line in self.__data:
             line=line.rstrip("\n")
-            print line
+            print(line)
             count=count+1
             if count >= limit:break
             
@@ -103,14 +107,14 @@ class PSL:
             line=line.rstrip('\n')
             field=self.__pslSplit.split(line)
             if string.atoi(field[17]) == 1:
-                print field[13],"\t",field[15],"\t",field[16],"\t",field[9],"\t",field[0]+'.'+field[1],"\t",field[8]
+                print(field[13],"\t",field[15],"\t",field[16],"\t",field[9],"\t",field[0]+'.'+field[1],"\t",field[8])
             else:
                 blockSize=field[18].split(',')
                 blockSize.pop(-1)
                 blockStart=field[20].split(',')
                 blockStart.pop(-1)
                 for i in range(0,len(blockSize)):
-                    print field[13],"\t",blockStart[i],"\t",string.atoi(blockStart[i])+string.atoi(blockSize[i]),"\t",field[9]+'.'+str(i+1),"\t",field[0]+'.'+field[1],"\t",field[8]
+                    print(field[13],"\t",blockStart[i],"\t",string.atoi(blockStart[i])+string.atoi(blockSize[i]),"\t",field[9]+'.'+str(i+1),"\t",field[0]+'.'+field[1],"\t",field[8])
 
 def main():
 	parser=OptionParser()

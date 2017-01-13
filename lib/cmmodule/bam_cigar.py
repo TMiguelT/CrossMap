@@ -19,6 +19,7 @@ The tuple [ (0,3), (1,5), (0,2) ] refers to an alignment with 3 matches,
 NOTE: only deal with Match, Gap, Soft Clip, Insertion, Deletion 
 '''
 
+from builtins import str
 __author__ = "Liguo Wang"
 __copyright__ = "Copyright 2012 Mayo Clinic"
 __credits__ = []

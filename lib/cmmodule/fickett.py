@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 '''calculate coding potential'''
+from __future__ import division
 
 # Fickett TESTCODE data
 # NAR 10(17) 5303-531
+from builtins import range
+from past.utils import old_div
 position_prob ={
 'A':[0.94,0.68,0.84,0.93,0.58,0.68,0.45,0.34,0.20,0.22],
 'C':[0.80,0.70,0.70,0.81,0.66,0.48,0.51,0.33,0.30,0.23],
@@ -44,10 +47,10 @@ def fickett_value(dna):
 	fickett_score=0
 	dna=dna.upper()
 	total_base = len(dna)
-	A_content = float(dna.count('A'))/total_base
-	C_content = float(dna.count('C'))/total_base
-	G_content = float(dna.count('G'))/total_base
-	T_content = float(dna.count('T'))/total_base
+	A_content = old_div(float(dna.count('A')),total_base)
+	C_content = old_div(float(dna.count('C')),total_base)
+	G_content = old_div(float(dna.count('G')),total_base)
+	T_content = old_div(float(dna.count('T')),total_base)
 	#print "A content\t" + str(A_content)
 	#print "C content\t" + str(C_content)
 	#print "G content\t" + str(G_content)
@@ -57,10 +60,10 @@ def fickett_value(dna):
 	phase_1 = [dna[i] for i in range(0,len(dna)) if i % 3==1]
 	phase_2 = [dna[i] for i in range(0,len(dna)) if i % 3==2]
 	
-	A_position=max(phase_0.count('A'),phase_1.count('A'),phase_2.count('A'))/(min(phase_0.count('A'),phase_1.count('A'),phase_2.count('A')) +1.0)
-	C_position=max(phase_0.count('C'),phase_1.count('C'),phase_2.count('C'))/(min(phase_0.count('C'),phase_1.count('C'),phase_2.count('C')) +1.0)
-	G_position=max(phase_0.count('G'),phase_1.count('G'),phase_2.count('G'))/(min(phase_0.count('G'),phase_1.count('G'),phase_2.count('G')) +1.0)
-	T_position=max(phase_0.count('T'),phase_1.count('T'),phase_2.count('T'))/(min(phase_0.count('T'),phase_1.count('T'),phase_2.count('T')) +1.0)
+	A_position=old_div(max(phase_0.count('A'),phase_1.count('A'),phase_2.count('A')),(min(phase_0.count('A'),phase_1.count('A'),phase_2.count('A')) +1.0))
+	C_position=old_div(max(phase_0.count('C'),phase_1.count('C'),phase_2.count('C')),(min(phase_0.count('C'),phase_1.count('C'),phase_2.count('C')) +1.0))
+	G_position=old_div(max(phase_0.count('G'),phase_1.count('G'),phase_2.count('G')),(min(phase_0.count('G'),phase_1.count('G'),phase_2.count('G')) +1.0))
+	T_position=old_div(max(phase_0.count('T'),phase_1.count('T'),phase_2.count('T')),(min(phase_0.count('T'),phase_1.count('T'),phase_2.count('T')) +1.0))
 	#print "A position\t" + str(A_position)
 	#print "C position\t" + str(C_position)
 	#print "G position\t" + str(G_position)

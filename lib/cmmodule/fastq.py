@@ -2,6 +2,7 @@
 '''manipulate fastq files'''
 
 #import built-in modules
+from builtins import object
 import os,sys
 import re
 import string
@@ -32,7 +33,7 @@ __status__ = "Development" #Prototype or Production
 
 
 
-class FQ:
+class FQ(object):
 	'''provides method to processing fastaq files'''
 	
 	def __init__(self,fqFile):

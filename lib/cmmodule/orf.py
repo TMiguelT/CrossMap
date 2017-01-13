@@ -1,5 +1,9 @@
+from __future__ import print_function
+from builtins import str
+from builtins import range
+from builtins import object
 import sys
-class ORFFinder:
+class ORFFinder(object):
   """Find the longest ORF in a given sequence 
   
    "seq" is a string, if "start" is not provided any codon can be the start of 
@@ -33,7 +37,7 @@ class ORFFinder:
     stop_codens = stop_coden   
     while True:
       try: 
-        c , index = codon_gen.next()
+        c , index = next(codon_gen)
       except StopIteration:
         break 
       # Lots of conditions here: checks if we care about looking for start 
@@ -43,7 +47,7 @@ class ORFFinder:
         end = False
         while True:
           try: 
-            c, index = codon_gen.next()
+            c, index = next(codon_gen)
           except StopIteration:
             end = True
           if c in stop_codens:
@@ -76,7 +80,7 @@ def little_test():
   	  continue
     seq	+= line
   (l,f,s) = ORFFinder(seq).longest_orf(sys.argv[2])
-  print str(l) + '\t' + str(f) + '\t' + s
+  print(str(l) + '\t' + str(f) + '\t' + s)
   
 if __name__ == "__main__":
   little_test()

@@ -5,10 +5,18 @@ CrossMap: lift over genomics coordinates between assemblies.
 Support BED, GFF/GTF, BAM/SAM, BigWig/Wig, etc.
 ------------------------------------------------------------------------------------------
 """
+from __future__ import division
+from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import os,sys
 if sys.version_info[0] != 2 or sys.version_info[1] != 7:
-        print >>sys.stderr, "\nYou are using python" + str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + " CrossMap needs python2.7.*!\n"
+        print("\nYou are using python" + str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + " CrossMap needs python2.7.*!\n", file=sys.stderr)
         sys.exit()
 
 import optparse
@@ -51,7 +59,7 @@ def printlog (mesg_lst):
 		msg = "@ " + strftime("%Y-%m-%d %H:%M:%S") + ": " +  mesg_lst[0]
 	else:
 		msg = "@ " + strftime("%Y-%m-%d %H:%M:%S") + ": " + ' '.join(mesg_lst)
-	print >>sys.stderr,msg
+	print(msg, file=sys.stderr)
 
 def parse_header( line ):
         return dict( [ field.split( '=' ) for field in line.split()[1:] ] )
@@ -121,7 +129,7 @@ def bigwigReader(infile, chrom_sizes=None, bin_size = 2000):
 	return: chrom, position (0-based), value
 	'''
 	bw_obj = BigWigFile(file=open(infile))
-	for chr_name, chr_size in chrom_sizes.items():
+	for chr_name, chr_size in list(chrom_sizes.items()):
 		for chrom, st, end in BED.tillingBed(chrName = chr_name,chrSize = chr_size,stepSize = bin_size):
 			sig_list = bw_obj.get_as_array(chrom,st,end)
 			if sig_list is None:
@@ -177,11 +185,12 @@ def check_bed12(bedline):
 		if i < 0: return False
 	return True
 
-def intersectBed((chr1, st1, end1), (chr2, st2, end2)):
+def intersectBed(xxx_todo_changeme, xxx_todo_changeme1):
 	'''
 	return intersection of two bed regions
 	'''
-	
+	(chr1, st1, end1) = xxx_todo_changeme
+	(chr2, st2, end2) = xxx_todo_changeme1
 	if int(st1) > int(end1) or int(st2) > int(end2):
 		raise Exception ("Start cannot be larger than end")
 	if chr1 != chr2:
@@ -275,7 +284,7 @@ def read_chain_file (chain_file, print_table=False):
 	
 	if print_table:
 		for i in blocks:
-			print '\t'.join([str(n) for n in i])
+			print('\t'.join([str(n) for n in i]))
 	
 	return (maps,target_chromSize, source_chromSize)	
 	
@@ -354,7 +363,7 @@ def map_coordinates(mapping, q_chr, q_start, q_end, q_strand='+', print_match=Fa
 					raise Exception("Unknown strand: %s. Can only be '+' or '-'." % q_strand)
 	
 	if print_match:
-		print matches
+		print(matches)
 		# input: 'chr1',246974830,247024835
 		# output: [('chr1', 246974830, 246974833, '+' ), ('chr1', 248908207, 248908210, '+' ), ('chr1', 247024833, 247024835, '+'), ('chr1', 249058210, 249058212,'+')]
 		# [('chr1', 246974830, 246974833), ('chr1', 248908207, 248908210)]
@@ -385,18 +394,18 @@ def crossmap_vcf_file(mapping, infile,outfile, liftoverfile, refgenome):
 			continue
 		line=line.strip()
 		if line.startswith('##'):
-			print >>FILE_OUT,line
-			print >>UNMAP, line
+			print(line, file=FILE_OUT)
+			print(line, file=UNMAP)
 			continue
 		#fields = line.split()
 		fields = string.split(line,maxsplit=7)
 		if fields[0].startswith('#'):
-			print >>FILE_OUT, "##liftOverProgram=CrossMap(https://sourceforge.net/projects/crossmap/)"
-			print >>FILE_OUT, "##liftOverFile=" + liftoverfile
-			print >>FILE_OUT, "##new_reference_genome=" + refgenome
-			print >>FILE_OUT, "##liftOverTime=" + datetime.date.today().strftime("%B%d,%Y")
-			print >>FILE_OUT,line
-			print >>UNMAP, line
+			print("##liftOverProgram=CrossMap(https://sourceforge.net/projects/crossmap/)", file=FILE_OUT)
+			print("##liftOverFile=" + liftoverfile, file=FILE_OUT)
+			print("##new_reference_genome=" + refgenome, file=FILE_OUT)
+			print("##liftOverTime=" + datetime.date.today().strftime("%B%d,%Y"), file=FILE_OUT)
+			print(line, file=FILE_OUT)
+			print(line, file=UNMAP)
 		else:
 			total += 1
 			if fields[0].startswith('chr'):
@@ -408,7 +417,7 @@ def crossmap_vcf_file(mapping, infile,outfile, liftoverfile, refgenome):
 			end = start + len(fields[3])
 			a = map_coordinates(mapping, chrom, start, end,'+')
 			if a is None:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 				fail += 1
 				continue
 			if len(a) == 2:
@@ -426,12 +435,12 @@ def crossmap_vcf_file(mapping, infile,outfile, liftoverfile, refgenome):
 				fields[3] = refFasta.fetch(str(a[1][0]),a[1][1],a[1][2]).upper()
 				
 				if fields[3] != fields[4]:
-					print >>FILE_OUT, '\t'.join(map(str, fields))
+					print('\t'.join(map(str, fields)), file=FILE_OUT)
 				else:
-					print >>UNMAP, line
+					print(line, file=UNMAP)
 					fail += 1
 			else:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 				fail += 1
 				continue
 	FILE_OUT.close()
@@ -464,28 +473,28 @@ def crossmap_bed_file(mapping, inbed,outfile=None):
 		
 		# filter out line less than 3 columns
 		if len(fields)<3:
-			print >>sys.stderr, "Less than 3 fields. skip " + line
+			print("Less than 3 fields. skip " + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 		try:
 			int(fields[1])
 		except:
-			print >>sys.stderr, "Start corrdinate is not an integer. skip " + line
+			print("Start corrdinate is not an integer. skip " + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 		try:
 			int(fields[2])
 		except:
-			print >>sys.stderr, "End corrdinate is not an integer. skip " + line
+			print("End corrdinate is not an integer. skip " + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 		if int(fields[1]) > int(fields[2]):
-			print >>sys.stderr, "\"Start\" is larger than \"End\" corrdinate is not an integer. skip " + line
+			print("\"Start\" is larger than \"End\" corrdinate is not an integer. skip " + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 			
 		# deal with bed less than 12 columns
@@ -505,9 +514,9 @@ def crossmap_bed_file(mapping, inbed,outfile=None):
 			try:
 				if len(a) % 2 != 0:
 					if outfile is None:
-						print line + '\tFail'
+						print(line + '\tFail')
 					else:
-						print >>UNMAP, line
+						print(line, file=UNMAP)
 					continue
 				if len(a) == 2:
 					
@@ -520,9 +529,9 @@ def crossmap_bed_file(mapping, inbed,outfile=None):
 							fields[i] = a[1][3]
 					
 					if outfile is None:
-						print line + '\t->\t' + '\t'.join([str(i) for i in fields])
+						print(line + '\t->\t' + '\t'.join([str(i) for i in fields]))
 					else:
-						print >>FILE_OUT, '\t'.join([str(i) for i in fields])
+						print('\t'.join([str(i) for i in fields]), file=FILE_OUT)
 				if len(a) >2 :
 					count=0
 					for j in range(1,len(a),2):
@@ -535,14 +544,14 @@ def crossmap_bed_file(mapping, inbed,outfile=None):
 								fields[i] = a[j][3]
 						
 						if outfile is None:
-							print line + '\t'+ '(split.' + str(count) + ':' + ':'.join([str(i) for i in a[j-1]]) + ')\t' + '\t'.join([str(i) for i in fields])
+							print(line + '\t'+ '(split.' + str(count) + ':' + ':'.join([str(i) for i in a[j-1]]) + ')\t' + '\t'.join([str(i) for i in fields]))
 						else:
-							print >>FILE_OUT, '\t'.join([str(i) for i in fields])
+							print('\t'.join([str(i) for i in fields]), file=FILE_OUT)
 			except:
 				if outfile is None:
-					print line + '\tFail'
+					print(line + '\tFail')
 				else:
-					print >>UNMAP, line
+					print(line, file=UNMAP)
 				continue
 		
 		# deal with bed12 and bed12+8 (genePred format)
@@ -600,15 +609,15 @@ def crossmap_bed_file(mapping, inbed,outfile=None):
 						fail_flag = True
 					else:
 						if outfile is None:
-							print line + '\t->\t' + new_bedline
+							print(line + '\t->\t' + new_bedline)
 						else:
-							print >>FILE_OUT, new_bedline
+							print(new_bedline, file=FILE_OUT)
 			
 			if fail_flag:
 				if outfile is None:
-					print line + '\tFail'
+					print(line + '\tFail')
 				else:
-					print >>UNMAP, line
+					print(line, file=UNMAP)
 				
 def crossmap_gff_file(mapping, ingff,outfile=None):			
 	'''
@@ -663,17 +672,17 @@ def crossmap_gff_file(mapping, ingff,outfile=None):
 		#	continue
 		try:
 			start = int(fields[3]) - 1	#0-based
-			end =  int(fields[4])/1
+			end =  old_div(int(fields[4]),1)
 			feature_size = end - start
 		except:
-			print >>sys.stderr, 'Cannot recognize \"start\" and \"end\" coordinates. Skip ' + line
+			print('Cannot recognize \"start\" and \"end\" coordinates. Skip ' + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 		if fields[6] not in ['+','-','.']:
-			print >>sys.stderr, 'Cannot recognize \"strand\". Skip ' + line
+			print('Cannot recognize \"strand\". Skip ' + line, file=sys.stderr)
 			if outfile:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue
 		
 		strand = '-' if fields[6] == '-' else '+'
@@ -682,30 +691,30 @@ def crossmap_gff_file(mapping, ingff,outfile=None):
 		a = map_coordinates(mapping, chrom,start,end,strand)
 		if a is None:
 			if outfile is None:
-				print line + '\tfail (no match to target assembly)'
+				print(line + '\tfail (no match to target assembly)')
 			else:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 			continue			
 		if len(a) !=2:
 			if outfile is None:
-				print line + '\tfail (multpile match to target assembly)'
+				print(line + '\tfail (multpile match to target assembly)')
 			else:
-				print >>UNMAP, line
+				print(line, file=UNMAP)
 		else:
 			if (int(a[1][2]) - int(a[1][1])) != feature_size:	# check if it is exact match
 				if outfile is None:
-					print line + '\tfail (not exact match)'
+					print(line + '\tfail (not exact match)')
 				else:
-					print >>UNMAP, line
+					print(line, file=UNMAP)
 			fields[0] = a[1][0]			# chrom
 			fields[3] = a[1][1] + 1		# start, 1-based 
 			fields[4] = a[1][2]
 			fields[6] = a[1][3]
 			
 			if outfile is None:
-				print line + '\t->\t' + '\t'.join([str(i) for i in fields])
+				print(line + '\t->\t' + '\t'.join([str(i) for i in fields]))
 			else:
-				print >>FILE_OUT, '\t'.join([str(i) for i in fields])
+				print('\t'.join([str(i) for i in fields]), file=FILE_OUT)
 			
 def crossmap_bam_file(mapping, chainfile, infile,  outfile_prefix, chrom_size, IS_size=200, IS_std=30, fold=3, addtag = True):			
 	'''
@@ -748,13 +757,13 @@ def crossmap_bam_file(mapping, chainfile, infile,  outfile_prefix, chrom_size, I
 	try:
 		samfile = pysam.Samfile(infile,'rb')
 		if len(samfile.header) ==0:
-			print >>sys.stderr, "BAM file has no header section. Exit!"
+			print("BAM file has no header section. Exit!", file=sys.stderr)
 			sys.exit(1)
 		bam_format = True
 	except:
 		samfile = pysam.Samfile(infile,'r')
 		if len(samfile.header) ==0:
-			print >>sys.stderr, "SAM file has no header section. Exit!"
+			print("SAM file has no header section. Exit!", file=sys.stderr)
 			sys.exit(1)
 		bam_format = False
 	
@@ -806,7 +815,7 @@ def crossmap_bam_file(mapping, chainfile, infile,  outfile_prefix, chrom_size, I
 		while(1):
 			total_item += 1
 			new_alignment = pysam.AlignedRead()	# create AlignedRead object
-			old_alignment = samfile.next()
+			old_alignment = next(samfile)
 			
 			# qcfailed reads will be written to OUT_FILE_UNMAP for both SE and PE reads
 			if old_alignment.is_qcfail:
@@ -1347,25 +1356,25 @@ def crossmap_bam_file(mapping, chainfile, infile,  outfile_prefix, chrom_size, I
 			except:
 				printlog(["Warning: ","output BAM file was NOT sorted and indexed."]) 
 				
-	print "Total alignments:" + str(total_item-1)
-	print "\tQC failed: " + str(QF)
+	print("Total alignments:" + str(total_item-1))
+	print("\tQC failed: " + str(QF))
 	if max(NN,NU, NM, UN, UU, UM, MN, MU, MM) > 0:
 
-		print "\tR1 unique, R2 unique (UU): " + str(UU)
-		print "\tR1 unique, R2 unmapp (UN): " + str(UN)
-		print "\tR1 unique, R2 multiple (UM): " + str(UM)
+		print("\tR1 unique, R2 unique (UU): " + str(UU))
+		print("\tR1 unique, R2 unmapp (UN): " + str(UN))
+		print("\tR1 unique, R2 multiple (UM): " + str(UM))
 
-		print "\tR1 multiple, R2 multiple (MM): " + str(MM)
-		print "\tR1 multiple, R2 unique (MU): " + str(MU)
-		print "\tR1 multiple, R2 unmapped (MN): " + str(MN)
+		print("\tR1 multiple, R2 multiple (MM): " + str(MM))
+		print("\tR1 multiple, R2 unique (MU): " + str(MU))
+		print("\tR1 multiple, R2 unmapped (MN): " + str(MN))
 		
-		print "\tR1 unmap, R2 unmap (NN): " + str(NN)
-		print "\tR1 unmap, R2 unique (NU): " + str(NU)
-		print "\tR1 unmap, R2 multiple (NM): " + str(NM)	
+		print("\tR1 unmap, R2 unmap (NN): " + str(NN))
+		print("\tR1 unmap, R2 unique (NU): " + str(NU))
+		print("\tR1 unmap, R2 multiple (NM): " + str(NM))	
 	if max(SN,SU,SM) > 0:
-		print "\tUniquley mapped (SU): " +  str(SU)
-		print "\tMultiple mapped (SM): " +  str(SM)
-		print "\tUnmapped (SN): " + str(SN)
+		print("\tUniquley mapped (SU): " +  str(SU))
+		print("\tMultiple mapped (SM): " +  str(SM))
+		print("\tUnmapped (SN): " + str(SN))
 	
 
 def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chrom_size, in_format, binSize=100000):
@@ -1388,7 +1397,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 			if maps is None:
 				continue
 			if len(maps) == 2:
-				print >>OUT_FILE1, '\t'.join([str(i) for i in [maps[1][0],maps[1][1],maps[1][2], score]])
+				print('\t'.join([str(i) for i in [maps[1][0],maps[1][1],maps[1][2], score]]), file=OUT_FILE1)
 			else:
 				continue
 			maps[:]=[]
@@ -1396,7 +1405,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 		
 		printlog (["Merging overlapped entries in bedGraph file ..."])
 		for (chr, start, end, score) in bgrMerge.merge(out_prefix + '.bgr'):
-			print >>OUT_FILE2, '\t'.join([str(i) for i in (chr, start, end, score )])
+			print('\t'.join([str(i) for i in (chr, start, end, score )]), file=OUT_FILE2)
 		OUT_FILE2.close()
 		
 		os.remove(out_prefix + '.bgr')
@@ -1407,7 +1416,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 			tmp_file = bgrMerge.randomword(10) + '.chromsize'
 			CS = open(tmp_file,'w')
 			for k in sorted(taget_chrom_size):
-				print >>CS, str(k) + '\t' + str(taget_chrom_size[k])
+				print(str(k) + '\t' + str(taget_chrom_size[k]), file=CS)
 			CS.close()
 			try:
 				subprocess.call([wigToBigWig_cmd, "-clip",  out_prefix + '.sorted.bgr', tmp_file, out_prefix + '.bw'])
@@ -1433,7 +1442,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 			try:
 				if maps is None: continue
 				if len(maps) == 2:
-					print >>OUT_FILE1, '\t'.join([str(i) for i in [maps[1][0],maps[1][1],maps[1][2], score]])
+					print('\t'.join([str(i) for i in [maps[1][0],maps[1][1],maps[1][2], score]]), file=OUT_FILE1)
 				else:
 					continue
 			except:
@@ -1443,7 +1452,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 		
 		printlog (["Merging overlapped entries in bedGraph file ..."])
 		for (chr, start, end, score) in bgrMerge.merge(out_prefix + '.bgr'):
-			print >>OUT_FILE2, '\t'.join([str(i) for i in (chr, start, end, score )])
+			print('\t'.join([str(i) for i in (chr, start, end, score )]), file=OUT_FILE2)
 		OUT_FILE2.close()	
 			
 		wigToBigWig_cmd = myutils.which('wigToBigWig') 
@@ -1452,7 +1461,7 @@ def crossmap_wig_file(mapping, in_file, out_prefix, source_chrom_size, taget_chr
 			tmp_file = bgrMerge.randomword(10) + '.chromsize'
 			CS = open(tmp_file,'w')
 			for k in sorted(taget_chrom_size):
-				print >>CS, str(k) + '\t' + str(taget_chrom_size[k])
+				print(str(k) + '\t' + str(taget_chrom_size[k]), file=CS)
 			CS.close()
 			try:
 				subprocess.call([wigToBigWig_cmd, "-clip",  out_prefix + '.sorted.bgr', tmp_file, out_prefix + '.bw'])
@@ -1475,12 +1484,12 @@ def general_help():
 annotation files between assemblies (eg. lift from human hg18 to hg19 or vice versa).\
 It supports file in BAM, SAM, BED, Wiggle, BigWig, GFF, GTF and VCF format."""
 	
-	print >>sys.stderr, "Program: %s (v%s)" % ("CrossMap", __version__)
-	print >>sys.stderr, "\nDescription: \n%s" % '\n'.join('  '+i for i in wrap(desc,width=80))
-	print >>sys.stderr, "\nUsage: CrossMap.py <command> [options]\n"
+	print("Program: %s (v%s)" % ("CrossMap", __version__), file=sys.stderr)
+	print("\nDescription: \n%s" % '\n'.join('  '+i for i in wrap(desc,width=80)), file=sys.stderr)
+	print("\nUsage: CrossMap.py <command> [options]\n", file=sys.stderr)
 	for k in sorted(commands):
-		print >>sys.stderr, '  ' + k + '\t' + commands[k]
-	print >>sys.stderr
+		print('  ' + k + '\t' + commands[k], file=sys.stderr)
+	print(file=sys.stderr)
 
 def bed_help():
 	msg =[
@@ -1490,7 +1499,7 @@ def bed_help():
 	('Example:', "CrossMapy.py bed hg18ToHg19.over.chain.gz test.hg18.bed  				 # write output to screen"),
 	]
 	for i,j in msg:
-		print >>sys.stderr, '\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)])
+		print('\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)]), file=sys.stderr)
 	
 def gff_help():
 	msg =[
@@ -1500,7 +1509,7 @@ def gff_help():
 	('Example:', "CrossMap.py gff  hg19ToHg18.over.chain.gz test.hg19.gtf  # write output to screen"),
 	]
 	for i,j in msg:
-		print >>sys.stderr, '\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)])
+		print('\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)]), file=sys.stderr)
 
 def wig_help():
 	msg =[
@@ -1509,7 +1518,7 @@ def wig_help():
 	('Example:', "CrossMapy.py wig hg18ToHg19.over.chain.gz test.hg18.wig test.hg19"),
 	]
 	for i,j in msg:
-		print >>sys.stderr, '\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)])
+		print('\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)]), file=sys.stderr)
 def bigwig_help():
 	msg =[
 	('Usage:', "CrossMap.py bigwig input_chain_file input__bigwig_file output_prefix"),
@@ -1517,7 +1526,7 @@ def bigwig_help():
 	('Example:', "CrossMapy.py bigwig hg18ToHg19.over.chain.gz test.hg18.bw test.hg19"),
 	]
 	for i,j in msg:
-		print >>sys.stderr, '\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)])
+		print('\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)]), file=sys.stderr)
 
 def bam_help():
 	usage="CrossMap.py bam input_chain_file input_bam_file output_file [options] "
@@ -1531,7 +1540,7 @@ def vcf_help():
 	("Example:", " CrossMap.py vcf hg19ToHg18.over.chain.gz test.hg19.vcf hg18.fa test.hg18.vcf"),
 	]
 	for i,j in msg:
-		print >>sys.stderr, '\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)])
+		print('\n' + i + '\n' + '\n'.join(['  ' + k for k in wrap(j,width=80)]), file=sys.stderr)
 
 	
 if __name__=='__main__':
@@ -1577,7 +1586,7 @@ if __name__=='__main__':
 	'bigwig':'convert genome coordinate file in BigWig format.',
 	'vcf':'convert genome coordinate file in VCF format.'
 	}	
-	kwds = commands.keys()
+	kwds = list(commands.keys())
 
 	
 	if len(sys.argv) == 1:
@@ -1648,13 +1657,13 @@ if __name__=='__main__':
 			(options,args)=parser.parse_args()
 			
 			if len(args) >= 3:
-				print >>sys.stderr, "Insert size = %f" % (options.insert_size)
-				print >>sys.stderr, "Insert size stdev = %f" % (options.insert_size_stdev)
-				print >>sys.stderr, "Number of stdev from the mean = %f" % (options.insert_size_fold)
+				print("Insert size = %f" % (options.insert_size), file=sys.stderr)
+				print("Insert size stdev = %f" % (options.insert_size_stdev), file=sys.stderr)
+				print("Number of stdev from the mean = %f" % (options.insert_size_fold), file=sys.stderr)
 				if options.add_tags:
-					print >>sys.stderr, "Add tags to each alignment = %s" % ( options.add_tags)
+					print("Add tags to each alignment = %s" % ( options.add_tags), file=sys.stderr)
 				else:
-					print >>sys.stderr, "Add tags to each alignment = %s" % ( False)
+					print("Add tags to each alignment = %s" % ( False), file=sys.stderr)
 				chain_file = args[1]
 				in_file = args[2]
 				out_file = args[3] if len(args) >= 4 else None

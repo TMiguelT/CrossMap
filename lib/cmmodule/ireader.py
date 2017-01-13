@@ -4,9 +4,12 @@ read compressed (.gz .bz) files
 #!/usr/bin/env python
 # encoding: utf-8
 
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
 import bz2
 import gzip
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 def nopen(f, mode="rb"):
 	if not isinstance(f, basestring):
@@ -18,7 +21,7 @@ def nopen(f, mode="rb"):
 	return {"r": sys.stdin, "w": sys.stdout}[mode[0]] if f == "-" \
 		else gzip.open(f, mode) if f.endswith((".gz", ".Z", ".z")) \
 		else bz2.BZ2File(f, mode) if f.endswith((".bz", ".bz2", ".bzip2")) \
-		else urllib.urlopen(f) if f.startswith(("http://", "https://","ftp://")) \
+		else urllib.request.urlopen(f) if f.startswith(("http://", "https://","ftp://")) \
 		else open(f, mode)
 
  

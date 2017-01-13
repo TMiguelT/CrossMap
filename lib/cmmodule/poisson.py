@@ -1,10 +1,11 @@
+from builtins import range
 import math
 def point_poip(actual, mean):
 	'''give poisson pvalue. P[obs ==mean]'''
 	# naive:   math.exp(-mean) * mean**actual / factorial(actual)
 	# iterative, to keep the components from getting too large or small:
 	p = math.exp(-mean)
-	for i in xrange(actual):
+	for i in range(actual):
 		p *= mean
 		p /= i+1
 	return p

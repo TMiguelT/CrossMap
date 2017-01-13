@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 '''manipulate fasta for fastq format files.'''
+from __future__ import division
 
 #import built-in modules
+from builtins import range
+from past.utils import old_div
 import re
 import sys
 from string import maketrans
@@ -27,13 +30,13 @@ __status__ = "Development" #Prototype or Production
 def S_diff(lst):
 	'''Given a list of int or float, calculate S_diff and S_point'''
 	
-	S_avg = sum(lst) / len(lst)
+	S_avg = old_div(sum(lst), len(lst))
 	S_dist = [i-S_avg for i in lst]	#distance to average
 	S_cum=[]	#list of cumulative sum
 	S_cum.append(0)
 	for i in range(0,len(S_dist)):
 		S_cum.append(S_cum[i] + S_dist[i])
-	return [nlargest(1,range(0,len(S_cum)),key=lambda i: S_cum[i]),(max(S_cum) - min(S_cum))]
+	return [nlargest(1,list(range(0,len(S_cum))),key=lambda i: S_cum[i]),(max(S_cum) - min(S_cum))]
 	#return the index of maximum_diff index, and maximum_diff
 
 def bootstrap(lst,obs,rep=1000):
@@ -50,7 +53,7 @@ def bootstrap(lst,obs,rep=1000):
 	for i in sorted(shuffled_diff):
 		if (i>=obs):
 			count += 1 
-	if count/rep <0.5:
-		return count/rep
+	if old_div(count,rep) <0.5:
+		return old_div(count,rep)
 	else:
-		return 1- count/rep
+		return 1- old_div(count,rep)

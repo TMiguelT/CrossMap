@@ -1,11 +1,13 @@
 '''manipulate ndarray list'''                                                       
-from itertools import imap,starmap,izip
+from __future__ import division
+from past.utils import old_div
+from itertools importstarmap
 from operator import mul,add,sub
 
 def check_list(v1,v2):
 	'''check if the length of two list is same'''
 	if v1.size != v2.size:
-		raise ValueError,"the lenght of both arrays must be the same"
+		raise ValueError("the lenght of both arrays must be the same")
 	pass
 
 def Add(v1,v2):
@@ -31,7 +33,7 @@ def Division(v1,v2):
 def Average(v1,v2):
 	'''return arithmetic mean of two list'''                                                                                 
 	check_list(v1,v2)
-	return v1.__add__(v2)/2
+	return old_div(v1.__add__(v2),2)
 
 def geometricMean(v1,v2):
 	'''return geometric mean of two list'''                                                                                 
@@ -41,13 +43,13 @@ def geometricMean(v1,v2):
 def Max(v1,v2):
 	'''pairwise comparison two list. return  the max one between two paried number'''                                                                                 
 	check_list(v1,v2)
-	return imap(max,izip(v1,v2))
+	return map(max,zip(v1,v2))
 
 def Min(v1,v2):
 	'''pairwise comparison two list. return  the max one between two paried number'''                                                                                 
 	check_list(v1,v2)
-	return imap(min,izip(v1,v2))
+	return map(min,zip(v1,v2))
 def euclidean_distance(v1,v2):
 	'''return euclidean distance'''                                                                                 
 	check_list(v1,v2)
-	return (sum((v1.__sub__(v2))**2) / v1.size)**0.5
+	return (old_div(sum((v1.__sub__(v2))**2), v1.size))**0.5

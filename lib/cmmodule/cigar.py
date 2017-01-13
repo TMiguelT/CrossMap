@@ -1,6 +1,7 @@
 '''manipulate CIGAR string'''
 
 #import built-in modules
+from builtins import str
 import os,sys
 import re
 import string

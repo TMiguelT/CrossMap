@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import range
 import os,sys
 import collections
 import subprocess
@@ -23,7 +25,7 @@ def printlog (mesg_lst):
 		msg = "@ " + strftime("%Y-%m-%d %H:%M:%S") + ": " +  mesg_lst[0]
 	else:
 		msg = "@ " + strftime("%Y-%m-%d %H:%M:%S") + ": " + ' '.join(mesg_lst)
-	print >>sys.stderr,msg
+	print(msg, file=sys.stderr)
 
 def read_bed_by_chr(f):
 	'''input bed file'''
@@ -68,7 +70,7 @@ def merge(infile):
 	for lines in line_iter:
 		top_marker = 0
 		overlap_pos2val = {}
-		for i in xrange(0, len(lines)-1):
+		for i in range(0, len(lines)-1):
 			(chr, start, end, score) = lines[i].split()
 			start = int(start)
 			end = int(end)
@@ -84,7 +86,7 @@ def merge(infile):
 				overlap_pos2val = {}
 			else:
 				for ind in range(start+1, end +1):
-					if overlap_pos2val.has_key(ind):
+					if ind in overlap_pos2val:
 						overlap_pos2val[ind] += score
 					else:
 						overlap_pos2val[ind] = score
@@ -98,7 +100,7 @@ def merge(infile):
 				last_end = int(last_end)
 				last_score = float(last_score)
 			except:
-				print last_chr, last_start,last_end
+				print(last_chr, last_start,last_end)
 				pass
 	
 			if last_start >= top_marker:
@@ -109,7 +111,7 @@ def merge(infile):
 				overlap_pos2val = {}
 			else:
 				for ind in range(last_start+1, last_end +1):
-					if overlap_pos2val.has_key(ind):
+					if ind in overlap_pos2val:
 						overlap_pos2val[ind] += last_score
 					else:
 						overlap_pos2val[ind] = last_score
